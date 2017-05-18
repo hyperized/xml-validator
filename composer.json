@@ -1,5 +1,5 @@
 {
-  "name": "hyperized/XmlValidator",
+  "name": "hyperized/xml-validator",
   "description": "A simple PHP XML validator",
   "keywords": [
     "xml",
