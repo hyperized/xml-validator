@@ -1,4 +1,4 @@
-# XmlValidator [![Build Status](https://travis-ci.org/hyperized/xml-validator.svg?branch=master)](https://travis-ci.org/hyperized/xml-validator) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/hyperized/xml-validator/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/hyperized/xml-validator/?branch=master) [![Code Coverage](https://scrutinizer-ci.com/g/hyperized/xml-validator/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/hyperized/xml-validator/?branch=master)
+# xml-validator [![Build Status](https://travis-ci.org/hyperized/xml-validator.svg?branch=master)](https://travis-ci.org/hyperized/xml-validator) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/hyperized/xml-validator/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/hyperized/xml-validator/?branch=master) [![Code Coverage](https://scrutinizer-ci.com/g/hyperized/xml-validator/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/hyperized/xml-validator/?branch=master)
 A simple PHP XML validator.
 
 Example usage:
