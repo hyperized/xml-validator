@@ -5,6 +5,11 @@ namespace Hyperized\Xml\Validator\Tests;
 use Hyperized\Xml\Validator;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * Class ValidatorTest
+ *
+ * @package Hyperized\Xml\Validator\Tests
+ */
 final class ValidatorTest extends TestCase
 {
     /**
@@ -20,65 +25,56 @@ final class ValidatorTest extends TestCase
      */
     protected static $incorrectXmlFile = __DIR__ . '/files/incorrect.xml';
 
-    public function testValidXMLFile()
+    /**
+     * @var Validator
+     */
+    private $validator;
+
+    public function setUp(): void
     {
-        $validator = new Validator();
-        self::assertTrue($validator->isXMLFileValid(static::$xmlFile));
+        $this->validator = new Validator();
     }
 
-    public function testValidXMLString()
+    public function testValidXMLFile(): void
+    {
+        self::assertTrue($this->validator->isXMLFileValid(static::$xmlFile));
+    }
+
+    public function testValidXMLString(): void
     {
         $xml = file_get_contents(static::$xmlFile);
-        $validator = new Validator();
-        self::assertTrue($validator->isXMLStringValid($xml));
+        self::assertTrue($this->validator->isXMLStringValid($xml));
     }
 
-    public function testEmptyXMLString()
+    public function testEmptyXMLString(): void
     {
-        $this->expectException(\Exception::class);
-        $validator = new Validator();
-        self::assertTrue($validator->isXMLStringValid(''));
+        self::assertFalse($this->validator->isXMLStringValid(''));
     }
 
-    public function testValidXSDFile()
+    public function testValidXSDFile(): void
     {
-        $validator = new Validator();
-        self::assertTrue($validator->isXMLFileValid(static::$xmlFile, static::$xsdFile));
+        self::assertTrue($this->validator->isXMLFileValid(static::$xmlFile, static::$xsdFile));
     }
 
-    public function testInvalidXMLFile()
+    public function testInvalidXMLFile(): void
     {
-        $this->expectException(\Exception::class);
-        $validator = new Validator();
-        $validator->isXMLFileValid(static::$incorrectXmlFile);
+        self::assertFalse($this->validator->isXMLFileValid(static::$incorrectXmlFile));
     }
 
-    public function testInvalidXSDFile()
+    public function testInvalidXSDFile(): void
     {
-        $this->expectException(\Exception::class);
-        $validator = new Validator();
-        $validator->isXMLFileValid(static::$incorrectXmlFile, static::$xsdFile);
+        self::assertFalse($this->validator->isXMLFileValid(static::$incorrectXmlFile, static::$xsdFile));
     }
 
-    public function testErrors()
+    public function testErrors(): void
     {
-        $validator = new Validator();
-        try {
-            $validator->isXMLFileValid(static::$incorrectXmlFile);
-        } catch (\Exception $exception) {
-            $errors = $validator->getErrors();
-        }
-        self::assertNotEmpty($errors);
+        $this->validator->isXMLFileValid(static::$incorrectXmlFile);
+        self::assertNotEmpty($this->validator->getErrors());
     }
 
-    public function testPrettyErrors()
+    public function testPrettyErrors(): void
     {
-        $validator = new Validator();
-        try {
-            $validator->isXMLFileValid(static::$incorrectXmlFile);
-        } catch (\Exception $exception) {
-            $errors = $validator->getPrettyErrors();
-        }
-        self::assertNotEmpty($errors);
+        $this->validator->isXMLFileValid(static::$incorrectXmlFile);
+        self::assertNotEmpty($this->validator->getPrettyErrors());
     }
 }

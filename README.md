@@ -21,9 +21,9 @@ var_dump($xmlValidator->isXMLStringValid($xmlString, $xsdFile));
 // Try / Catch incorrect XML
 $dirtyXMLString = file_get_contents(__DIR__ . '/tests/files/incorrect.xml');
 
-try {
-    $xmlValidator->isXMLStringValid($dirtyXMLString, $xsdFile);
-} catch (\Exception $exception) {
+if(!$xmlValidator->isXMLStringValid($dirtyXMLString, $xsdFile))
+{
+    var_dump($xmlValidator->getErrors());
     var_dump($xmlValidator->getPrettyErrors());
 }
 

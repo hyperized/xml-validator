@@ -10,7 +10,7 @@ namespace Hyperized\Xml;
 class Validator
 {
     /**
-     * @var
+     * @var array
      */
     protected $errors;
 
@@ -22,11 +22,9 @@ class Validator
      *
      * @return bool
      */
-    public function isXMLFileValid($xmlFilename, $xsdFile = null, $version = '1.0', $encoding = 'utf-8')
+    public function isXMLFileValid($xmlFilename, $xsdFile = null, $version = '1.0', $encoding = 'utf-8'): bool
     {
-        $xmlContent = file_get_contents($xmlFilename);
-        $this->isXMLStringValid($xmlContent, $xsdFile, $version, $encoding);
-        return true;
+        return $this->isXMLStringValid(file_get_contents($xmlFilename), $xsdFile, $version, $encoding);
     }
 
     /**
@@ -36,17 +34,14 @@ class Validator
      * @param string $encoding
      *
      * @return bool
-     * @throws \Exception
      */
-    public function isXMLStringValid($xml, $xsdFile = null, $version = '1.0', $encoding = 'utf-8')
+    public function isXMLStringValid($xml, $xsdFile = null, $version = '1.0', $encoding = 'utf-8'): bool
     {
-        if ($xsdFile !== null) {
-            if (!$this->isXMLContentValid($xml, $version, $encoding, $xsdFile)) {
-                throw new \Exception('XSD validation failed!');
-            }
+        if ($xsdFile !== null && !$this->isXMLContentValid($xml, $version, $encoding, $xsdFile)) {
+            return false;
         }
         if (!$this->isXMLContentValid($xml, $version, $encoding)) {
-            throw new \Exception('XML content validation failed!');
+            return false;
         }
         return true;
     }
@@ -59,9 +54,9 @@ class Validator
      *
      * @return bool
      */
-    public function isXMLContentValid($xmlContent, $version = '1.0', $encoding = 'utf-8', $xsdFile = null)
+    public function isXMLContentValid($xmlContent, $version = '1.0', $encoding = 'utf-8', $xsdFile = null): bool
     {
-        if (trim($xmlContent) == '') {
+        if (trim($xmlContent) === '') {
             return false;
         }
 
@@ -81,7 +76,7 @@ class Validator
     /**
      * @return mixed
      */
-    public function getErrors()
+    public function getErrors(): array
     {
         return $this->errors;
     }
@@ -89,7 +84,7 @@ class Validator
     /**
      * @return string
      */
-    public function getPrettyErrors()
+    public function getPrettyErrors(): string
     {
         $return = [];
         foreach ($this->errors as $error) {
