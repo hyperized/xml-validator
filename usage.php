@@ -2,7 +2,7 @@
 
 namespace Hyperized\Xml;
 
-require(__DIR__ . '/vendor/autoload.php');
+require __DIR__ . '/vendor/autoload.php';
 
 $xmlString = file_get_contents(__DIR__ . '/tests/files/correct.xml');
 $xmlFile = __DIR__ . '/tests/files/correct.xml';
@@ -15,8 +15,7 @@ var_dump($xmlValidator->isXMLStringValid($xmlString, $xsdFile));
 // Try / Catch incorrect XML
 $dirtyXMLString = file_get_contents(__DIR__ . '/tests/files/incorrect.xml');
 
-if(!$xmlValidator->isXMLStringValid($dirtyXMLString, $xsdFile))
-{
+if (!$xmlValidator->isXMLStringValid($dirtyXMLString, $xsdFile)) {
     var_dump($xmlValidator->getErrors());
     var_dump($xmlValidator->getPrettyErrors());
 }
