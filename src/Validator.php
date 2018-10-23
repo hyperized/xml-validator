@@ -16,7 +16,7 @@ class Validator
 
     /**
      * @param        $xmlFilename
-     * @param null   $xsdFile
+     * @param        $xsdFile
      * @param string $version
      * @param string $encoding
      *
@@ -29,7 +29,7 @@ class Validator
 
     /**
      * @param        $xml
-     * @param null   $xsdFile
+     * @param        $xsdFile
      * @param string $version
      * @param string $encoding
      *
@@ -50,7 +50,7 @@ class Validator
      * @param        $xmlContent
      * @param string $version
      * @param string $encoding
-     * @param null   $xsdFile
+     * @param        $xsdFile
      *
      * @return bool
      */

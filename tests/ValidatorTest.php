@@ -15,15 +15,15 @@ final class ValidatorTest extends TestCase
     /**
      * @var string
      */
-    protected static $xsdFile = __DIR__ . '/files/simple.xsd';
+    private static $xsdFile = __DIR__ . '/files/simple.xsd';
     /**
      * @var string
      */
-    protected static $xmlFile = __DIR__ . '/files/correct.xml';
+    private static $xmlFile = __DIR__ . '/files/correct.xml';
     /**
      * @var string
      */
-    protected static $incorrectXmlFile = __DIR__ . '/files/incorrect.xml';
+    private static $incorrectXmlFile = __DIR__ . '/files/incorrect.xml';
 
     /**
      * @var Validator
