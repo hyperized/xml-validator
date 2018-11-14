@@ -1,6 +1,4 @@
 composer.phar
 /vendor/
-/cache/
 /.idea/
 composer.lock
-clover.xml
