@@ -1,7 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Hyperized\Xml\Validator\Tests;
 
+use Hyperized\Xml\Constants\ErrorMessages;
+use Hyperized\Xml\Exceptions\InvalidXmlException;
 use Hyperized\Xml\Validator;
 use PHPUnit\Framework\TestCase;
 
@@ -46,9 +48,19 @@ final class ValidatorTest extends TestCase
         self::assertTrue($this->validator->isXMLStringValid($xml));
     }
 
+    public function testInvalidXMLString(): void
+    {
+        $this->expectException(InvalidXmlException::class);
+        $this->expectExceptionMessage(ErrorMessages::XmlNoName);
+        $xml = file_get_contents(static::$incorrectXmlFile);
+        $this->validator->isXMLStringValid($xml);
+    }
+
     public function testEmptyXMLString(): void
     {
-        self::assertFalse($this->validator->isXMLStringValid(''));
+        $this->expectException(InvalidXmlException::class);
+        $this->expectExceptionMessage(ErrorMessages::XmlEmptyTrimmed);
+        $this->validator->isXMLStringValid('');
     }
 
     public function testValidXSDFile(): void
@@ -58,23 +70,15 @@ final class ValidatorTest extends TestCase
 
     public function testInvalidXMLFile(): void
     {
-        self::assertFalse($this->validator->isXMLFileValid(static::$incorrectXmlFile));
+        $this->expectException(InvalidXmlException::class);
+        $this->expectExceptionMessage(ErrorMessages::XmlNoName);
+        $this->validator->isXMLFileValid(static::$incorrectXmlFile);
     }
 
     public function testInvalidXSDFile(): void
     {
-        self::assertFalse($this->validator->isXMLFileValid(static::$incorrectXmlFile, static::$xsdFile));
-    }
-
-    public function testErrors(): void
-    {
-        $this->validator->isXMLFileValid(static::$incorrectXmlFile);
-        self::assertNotEmpty($this->validator->getErrors());
-    }
-
-    public function testPrettyErrors(): void
-    {
-        $this->validator->isXMLFileValid(static::$incorrectXmlFile);
-        self::assertNotEmpty($this->validator->getPrettyErrors());
+        $this->expectException(InvalidXmlException::class);
+        $this->expectExceptionMessage(ErrorMessages::XmlNoName);
+        $this->validator->isXMLFileValid(static::$incorrectXmlFile, static::$xsdFile);
     }
 }
