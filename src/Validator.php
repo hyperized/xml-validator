@@ -2,17 +2,19 @@
 
 namespace Hyperized\Xml;
 
+use Hyperized\Xml\Exceptions\InvalidXmlException;
+
 /**
  * Class Validator
  * @package Hyperized\Xml
  * Based on: http://stackoverflow.com/a/30058598/1757763
  */
-class Validator
+final class Validator
 {
     /**
      * @var array
      */
-    protected $errors;
+    private $errors;
 
     /**
      * @param        $xmlFilename
@@ -21,8 +23,9 @@ class Validator
      * @param string $encoding
      *
      * @return bool
+     * @throws InvalidXmlException
      */
-    public function isXMLFileValid($xmlFilename, $xsdFile = null, $version = '1.0', $encoding = 'utf-8'): bool
+    public function isXMLFileValid(string $xmlFilename, string $xsdFile = null, string $version = '1.0', string $encoding = 'utf-8'): bool
     {
         return $this->isXMLStringValid(file_get_contents($xmlFilename), $xsdFile, $version, $encoding);
     }
@@ -34,30 +37,32 @@ class Validator
      * @param string $encoding
      *
      * @return bool
+     * @throws InvalidXmlException
      */
-    public function isXMLStringValid($xml, $xsdFile = null, $version = '1.0', $encoding = 'utf-8'): bool
+    public function isXMLStringValid(string $xml, string $xsdFile = null, string $version = '1.0', string $encoding = 'utf-8'): bool
     {
         if ($xsdFile !== null && !$this->isXMLContentValid($xml, $version, $encoding, $xsdFile)) {
-            return false;
+            throw new InvalidXmlException('Could not validate XML string with XSD file');
         }
         if (!$this->isXMLContentValid($xml, $version, $encoding)) {
-            return false;
+            throw new InvalidXmlException('Could not validate XML string');
         }
         return true;
     }
 
     /**
-     * @param        $xmlContent
+     * @param string $xmlContent
      * @param string $version
      * @param string $encoding
-     * @param        $xsdFile
+     * @param string|null $xsdFile
      *
      * @return bool
+     * @throws InvalidXmlException
      */
-    public function isXMLContentValid($xmlContent, $version = '1.0', $encoding = 'utf-8', $xsdFile = null): bool
+    private function isXMLContentValid(string $xmlContent, string $version = '1.0', string $encoding = 'utf-8', string $xsdFile = null): bool
     {
         if (trim($xmlContent) === '') {
-            return false;
+            throw new InvalidXmlException('The provided XML content is, after trimming, in fact an empty string');
         }
 
         libxml_use_internal_errors(true);

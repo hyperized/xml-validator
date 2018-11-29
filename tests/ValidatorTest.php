@@ -2,6 +2,7 @@
 
 namespace Hyperized\Xml\Validator\Tests;
 
+use Hyperized\Xml\Exceptions\InvalidXmlException;
 use Hyperized\Xml\Validator;
 use PHPUnit\Framework\TestCase;
 
@@ -48,7 +49,8 @@ final class ValidatorTest extends TestCase
 
     public function testEmptyXMLString(): void
     {
-        self::assertFalse($this->validator->isXMLStringValid(''));
+        $this->expectException(InvalidXmlException::class);
+        $this->validator->isXMLStringValid('');
     }
 
     public function testValidXSDFile(): void
@@ -58,22 +60,26 @@ final class ValidatorTest extends TestCase
 
     public function testInvalidXMLFile(): void
     {
-        self::assertFalse($this->validator->isXMLFileValid(static::$incorrectXmlFile));
+        $this->expectException(InvalidXmlException::class);
+        $this->validator->isXMLFileValid(static::$incorrectXmlFile);
     }
 
     public function testInvalidXSDFile(): void
     {
-        self::assertFalse($this->validator->isXMLFileValid(static::$incorrectXmlFile, static::$xsdFile));
+        $this->expectException(InvalidXmlException::class);
+        $this->validator->isXMLFileValid(static::$incorrectXmlFile, static::$xsdFile);
     }
 
     public function testErrors(): void
     {
+        $this->expectException(InvalidXmlException::class);
         $this->validator->isXMLFileValid(static::$incorrectXmlFile);
         self::assertNotEmpty($this->validator->getErrors());
     }
 
     public function testPrettyErrors(): void
     {
+        $this->expectException(InvalidXmlException::class);
         $this->validator->isXMLFileValid(static::$incorrectXmlFile);
         self::assertNotEmpty($this->validator->getPrettyErrors());
     }
