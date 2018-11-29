@@ -1,8 +1,10 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Hyperized\Xml;
 
+use Hyperized\Xml\Constants\Strings;
 use Hyperized\Xml\Exceptions\InvalidXmlException;
+use Hyperized\Xml\Constants\ErrorMessages;
 
 /**
  * Class Validator
@@ -12,11 +14,6 @@ use Hyperized\Xml\Exceptions\InvalidXmlException;
 final class Validator
 {
     /**
-     * @var array
-     */
-    private $errors;
-
-    /**
      * @param        $xmlFilename
      * @param        $xsdFile
      * @param string $version
@@ -25,7 +22,7 @@ final class Validator
      * @return bool
      * @throws InvalidXmlException
      */
-    public function isXMLFileValid(string $xmlFilename, string $xsdFile = null, string $version = '1.0', string $encoding = 'utf-8'): bool
+    public function isXMLFileValid(string $xmlFilename, string $xsdFile = null, string $version = Strings::version, string $encoding = Strings::UTF8): bool
     {
         return $this->isXMLStringValid(file_get_contents($xmlFilename), $xsdFile, $version, $encoding);
     }
@@ -39,15 +36,12 @@ final class Validator
      * @return bool
      * @throws InvalidXmlException
      */
-    public function isXMLStringValid(string $xml, string $xsdFile = null, string $version = '1.0', string $encoding = 'utf-8'): bool
+    public function isXMLStringValid(string $xml, string $xsdFile = null, string $version = Strings::version, string $encoding = Strings::UTF8): bool
     {
-        if ($xsdFile !== null && !$this->isXMLContentValid($xml, $version, $encoding, $xsdFile)) {
-            throw new InvalidXmlException('Could not validate XML string with XSD file');
+        if ($xsdFile !== null) {
+            return $this->isXMLContentValid($xml, $version, $encoding, $xsdFile);
         }
-        if (!$this->isXMLContentValid($xml, $version, $encoding)) {
-            throw new InvalidXmlException('Could not validate XML string');
-        }
-        return true;
+        return $this->isXMLContentValid($xml, $version, $encoding);
     }
 
     /**
@@ -59,10 +53,10 @@ final class Validator
      * @return bool
      * @throws InvalidXmlException
      */
-    private function isXMLContentValid(string $xmlContent, string $version = '1.0', string $encoding = 'utf-8', string $xsdFile = null): bool
+    private function isXMLContentValid(string $xmlContent, string $version = Strings::version, string $encoding = Strings::UTF8, string $xsdFile = null): bool
     {
         if (trim($xmlContent) === '') {
-            throw new InvalidXmlException('The provided XML content is, after trimming, in fact an empty string');
+            throw new InvalidXmlException(ErrorMessages::XmlEmptyTrimmed);
         }
 
         libxml_use_internal_errors(true);
@@ -72,29 +66,17 @@ final class Validator
         if ($xsdFile !== null) {
             $doc->schemaValidate($xsdFile);
         }
-        $this->errors = libxml_get_errors();
+
+        $errors = libxml_get_errors();
         libxml_clear_errors();
-
-        return empty($this->errors);
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getErrors(): array
-    {
-        return $this->errors;
-    }
-
-    /**
-     * @return string
-     */
-    public function getPrettyErrors(): string
-    {
-        $return = [];
-        foreach ($this->errors as $error) {
-            $return[] = $error->message;
+        if(!empty($errors))
+        {
+            $return = [];
+            foreach ($errors as $error) {
+                $return[] = $error->message;
+            }
+            throw new InvalidXmlException(implode(Strings::newLine, $return));
         }
-        return implode("\n", $return);
+        return true;
     }
 }
