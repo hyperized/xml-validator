@@ -73,7 +73,7 @@ final class Validator
         {
             $return = [];
             foreach ($errors as $error) {
-                $return[] = $error->message;
+                $return[] = trim($error->message);
             }
             throw new InvalidXmlException(implode(Strings::newLine, $return));
         }

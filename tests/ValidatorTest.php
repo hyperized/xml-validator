@@ -78,6 +78,7 @@ final class ValidatorTest extends TestCase
     public function testInvalidXSDFile(): void
     {
         $this->expectException(InvalidXmlException::class);
+        $this->expectExceptionMessage(ErrorMessages::XmlNoName);
         $this->validator->isXMLFileValid(static::$incorrectXmlFile, static::$xsdFile);
     }
 }
