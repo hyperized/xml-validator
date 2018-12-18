@@ -1,11 +1,25 @@
 language: php
+
 php:
   - '7.2'
   - '7.3'
+  - master
+
+matrix:
+  allow_failures:
+    - php: master
+  fast_finish: true
+
+before_install:
+  - composer self-update
+  - composer clear-cache
+
 install:
   - composer install --no-interaction
+
 script:
   - phpunit --coverage-clover=coverage.xml
+
 after_script:
   - wget https://scrutinizer-ci.com/ocular.phar
   - php ocular.phar code-coverage:upload --format=php-clover coverage.xml
