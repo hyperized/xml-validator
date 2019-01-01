@@ -10,10 +10,7 @@ namespace Hyperized\Xml\Constants;
  */
 final class Strings
 {
-    public const /**
- * @noinspection PhpConstantNamingConventionInspection 
-*/
-        UTF8 = 'utf-8';
+    public const UTF_8 = 'utf-8';
     public const VERSION = '1.0';
     public const NEW_LINE = "\n";
 }

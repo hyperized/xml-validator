@@ -22,7 +22,7 @@ final class Validator
     /**
      * @var string
      */
-    private $encoding = Strings::UTF8;
+    private $encoding = Strings::UTF_8;
 
     /**
      * @param  string $xmlFilename

@@ -34,7 +34,7 @@ final class ValidatorTest extends TestCase
     /**
      * @var string
      */
-    private static $encoding = Strings::UTF8;
+    private static $encoding = Strings::UTF_8;
 
     /**
      * @var Validator
