@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Hyperized\Xml\Validator\Tests;
+namespace Hyperized\Xml\Tests;
 
 use Hyperized\Xml\Constants\ErrorMessages;
 use Hyperized\Xml\Constants\Strings;
