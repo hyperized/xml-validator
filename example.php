@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Hyperized\Xml;
 
@@ -22,7 +22,7 @@ print_r($validator->isXMLFileValid($xmlFile, $xsdFile)); // 1
 // Error handling
 try {
     $validator->isXMLStringValid($dirtyXMLString, $xsdFile);
-} catch (Exceptions\InvalidXmlException $exception)
+} catch (Exceptions\InvalidXml $exception)
 {
     print_r($exception->getMessage()); //  xmlParseEntityRef: no name\n The document has no document element.
 }

@@ -3,7 +3,8 @@
 namespace Hyperized\Xml\Validator\Tests;
 
 use Hyperized\Xml\Constants\ErrorMessages;
-use Hyperized\Xml\Exceptions\InvalidXmlException;
+use Hyperized\Xml\Constants\Strings;
+use Hyperized\Xml\Exceptions\InvalidXml;
 use Hyperized\Xml\Validator;
 use PHPUnit\Framework\TestCase;
 
@@ -26,6 +27,14 @@ final class ValidatorTest extends TestCase
      * @var string
      */
     private static $incorrectXmlFile = __DIR__ . '/files/incorrect.xml';
+    /**
+     * @var string
+     */
+    private static $version = Strings::VERSION;
+    /**
+     * @var string
+     */
+    private static $encoding = Strings::UTF8;
 
     /**
      * @var Validator
@@ -37,6 +46,18 @@ final class ValidatorTest extends TestCase
         $this->validator = new Validator();
     }
 
+    public function testVersion(): void
+    {
+        $this->validator->setVersion(static::$version);
+        self::assertEquals(static::$version, $this->validator->getVersion());
+    }
+
+    public function testEncoding(): void
+    {
+        $this->validator->setEncoding(static::$encoding);
+        self::assertEquals(static::$encoding, $this->validator->getEncoding());
+    }
+
     public function testValidXMLFile(): void
     {
         self::assertTrue($this->validator->isXMLFileValid(static::$xmlFile));
@@ -44,22 +65,22 @@ final class ValidatorTest extends TestCase
 
     public function testValidXMLString(): void
     {
-        $xml = file_get_contents(static::$xmlFile);
-        self::assertTrue($this->validator->isXMLStringValid($xml));
+        $contents = file_get_contents(static::$xmlFile);
+        self::assertTrue($this->validator->isXMLStringValid($contents));
     }
 
     public function testInvalidXMLString(): void
     {
-        $this->expectException(InvalidXmlException::class);
-        $this->expectExceptionMessage(ErrorMessages::XmlNoName);
-        $xml = file_get_contents(static::$incorrectXmlFile);
-        $this->validator->isXMLStringValid($xml);
+        $this->expectException(InvalidXml::class);
+        $this->expectExceptionMessage(ErrorMessages::XML_NO_NAME);
+        $contents = file_get_contents(static::$incorrectXmlFile);
+        $this->validator->isXMLStringValid($contents);
     }
 
     public function testEmptyXMLString(): void
     {
-        $this->expectException(InvalidXmlException::class);
-        $this->expectExceptionMessage(ErrorMessages::XmlEmptyTrimmed);
+        $this->expectException(InvalidXml::class);
+        $this->expectExceptionMessage(ErrorMessages::XML_EMPTY_TRIMMED);
         $this->validator->isXMLStringValid('');
     }
 
@@ -70,15 +91,15 @@ final class ValidatorTest extends TestCase
 
     public function testInvalidXMLFile(): void
     {
-        $this->expectException(InvalidXmlException::class);
-        $this->expectExceptionMessage(ErrorMessages::XmlNoName);
+        $this->expectException(InvalidXml::class);
+        $this->expectExceptionMessage(ErrorMessages::XML_NO_NAME);
         $this->validator->isXMLFileValid(static::$incorrectXmlFile);
     }
 
     public function testInvalidXSDFile(): void
     {
-        $this->expectException(InvalidXmlException::class);
-        $this->expectExceptionMessage(ErrorMessages::XmlNoName);
+        $this->expectException(InvalidXml::class);
+        $this->expectExceptionMessage(ErrorMessages::XML_NO_NAME);
         $this->validator->isXMLFileValid(static::$incorrectXmlFile, static::$xsdFile);
     }
 }

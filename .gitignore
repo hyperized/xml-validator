@@ -1,4 +1,5 @@
-composer.phar
-clover.xml
+/composer.phar
+/clover.xml
 /vendor/
 /.idea/
+/.php_cs.cache

@@ -19,6 +19,8 @@ install:
 
 script:
   - phpunit --coverage-clover=coverage.xml
+  - vendor/bin/phpcs src --standard=PSR2
+  - vendor/bin/phpcbf src
   - vendor/bin/phpa src
 
 after_script:
