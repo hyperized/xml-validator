@@ -2,9 +2,10 @@
 
 namespace Hyperized\Xml;
 
+use DOMDocument;
 use Hyperized\Xml\Constants\ErrorMessages;
 use Hyperized\Xml\Constants\Strings;
-use Hyperized\Xml\Exceptions\InvalidXmlException;
+use Hyperized\Xml\Exceptions\InvalidXml;
 
 /**
  * Class Validator
@@ -15,69 +16,64 @@ use Hyperized\Xml\Exceptions\InvalidXmlException;
 final class Validator
 {
     /**
-     * @param        $xmlFilename
-     * @param        $xsdFile
-     * @param string $version
-     * @param string $encoding
-     *
+     * @var string
+     */
+    private $version = Strings::VERSION;
+    /**
+     * @var string
+     */
+    private $encoding = Strings::UTF_8;
+
+    /**
+     * @param  string $xmlFilename
+     * @param  string $xsdFile
      * @return bool
-     * @throws InvalidXmlException
+     * @throws InvalidXml
      */
     public function isXMLFileValid(
         string $xmlFilename,
-        string $xsdFile = null,
-        string $version = Strings::version,
-        string $encoding = Strings::UTF8
+        string $xsdFile = null
     ): bool {
-        return $this->isXMLStringValid(file_get_contents($xmlFilename), $xsdFile, $version, $encoding);
+        return $this->isXMLStringValid(file_get_contents($xmlFilename), $xsdFile);
     }
 
     /**
-     * @param        $xml
-     * @param        $xsdFile
-     * @param string $version
-     * @param string $encoding
-     *
+     * @param  string $xml
+     * @param  string $xsdFile
      * @return bool
-     * @throws InvalidXmlException
+     * @throws InvalidXml
      */
     public function isXMLStringValid(
         string $xml,
-        string $xsdFile = null,
-        string $version = Strings::version,
-        string $encoding = Strings::UTF8
+        string $xsdFile = null
     ): bool {
-        if (is_string($xsdFile)) {
-            return $this->isXMLContentValid($xml, $version, $encoding, $xsdFile);
+        if (\is_string($xsdFile)) {
+            return $this->isXMLValid($xml, $xsdFile);
         }
-        return $this->isXMLContentValid($xml, $version, $encoding);
+        return $this->isXMLValid($xml);
     }
 
     /**
      * @param string      $xmlContent
-     * @param string      $version
-     * @param string      $encoding
      * @param string|null $xsdFile
      *
      * @return bool
-     * @throws InvalidXmlException
+     * @throws InvalidXml
      */
-    private function isXMLContentValid(
+    private function isXMLValid(
         string $xmlContent,
-        string $version = Strings::version,
-        string $encoding = Strings::UTF8,
         string $xsdFile = null
     ): bool {
         if (trim($xmlContent) === '') {
-            throw new InvalidXmlException(ErrorMessages::XmlEmptyTrimmed);
+            throw new InvalidXml(ErrorMessages::XML_EMPTY_TRIMMED);
         }
 
         libxml_use_internal_errors(true);
 
-        $doc = new \DOMDocument($version, $encoding);
-        $doc->loadXML($xmlContent);
-        if (is_string($xsdFile)) {
-            $doc->schemaValidate($xsdFile);
+        $document = new DOMDocument($this->version, $this->encoding);
+        $document->loadXML($xmlContent);
+        if (\is_string($xsdFile)) {
+            $document->schemaValidate($xsdFile);
         }
 
         $errors = libxml_get_errors();
@@ -87,8 +83,40 @@ final class Validator
             foreach ($errors as $error) {
                 $return[] = trim($error->message);
             }
-            throw new InvalidXmlException(implode(Strings::newLine, $return));
+            throw new InvalidXml(implode(Strings::NEW_LINE, $return));
         }
         return true;
+    }
+
+    /**
+     * @param string $version
+     */
+    public function setVersion(string $version): void
+    {
+        $this->version = $version;
+    }
+
+    /**
+     * @param string $encoding
+     */
+    public function setEncoding(string $encoding): void
+    {
+        $this->encoding = $encoding;
+    }
+
+    /**
+     * @return string
+     */
+    public function getVersion(): string
+    {
+        return $this->version;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEncoding(): string
+    {
+        return $this->encoding;
     }
 }

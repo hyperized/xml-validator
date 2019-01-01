@@ -2,9 +2,13 @@
 
 namespace Hyperized\Xml\Exceptions;
 
+use Exception;
+
 /**
  * Class InvalidXmlException
  *
  * @package Hyperized\Xml\Exceptions
  */
-class InvalidXmlException extends \Exception {}
+class InvalidXml extends Exception
+{
+}
