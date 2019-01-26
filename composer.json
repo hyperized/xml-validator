@@ -38,7 +38,7 @@
     }
   },
   "scripts": {
-    "phan": "/vendor/bin/phan --allow-polyfill-parser",
+    "phan": "vendor/bin/phan --allow-polyfill-parser",
     "phpcs": "vendor/bin/phpcs src --standard=PSR2",
     "phpcbf": "vendor/bin/phpcbf src",
     "phpmnd": "vendor/bin/phpmnd src",
