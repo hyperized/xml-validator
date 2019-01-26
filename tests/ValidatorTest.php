@@ -4,6 +4,7 @@ namespace Hyperized\Xml\Tests;
 
 use Hyperized\Xml\Constants\ErrorMessages;
 use Hyperized\Xml\Constants\Strings;
+use Hyperized\Xml\Exceptions\FileCouldNotBeOpenedException;
 use Hyperized\Xml\Exceptions\InvalidXml;
 use Hyperized\Xml\Validator;
 use PHPUnit\Framework\TestCase;
@@ -66,7 +67,9 @@ final class ValidatorTest extends TestCase
     public function testValidXMLString(): void
     {
         $contents = file_get_contents(static::$xmlFile);
-        self::assertTrue($this->validator->isXMLStringValid($contents));
+        if (\is_string($contents)) {
+            self::assertTrue($this->validator->isXMLStringValid($contents));
+        }
     }
 
     public function testInvalidXMLString(): void
@@ -74,7 +77,9 @@ final class ValidatorTest extends TestCase
         $this->expectException(InvalidXml::class);
         $this->expectExceptionMessage(ErrorMessages::XML_NO_NAME);
         $contents = file_get_contents(static::$incorrectXmlFile);
-        $this->validator->isXMLStringValid($contents);
+        if(\is_string($contents)) {
+            $this->validator->isXMLStringValid($contents);
+        }
     }
 
     public function testEmptyXMLString(): void
