@@ -10,15 +10,15 @@ namespace Hyperized\Xml;
 interface ValidatorInterface
 {
     /**
-     * @param string      $xmlPath
-     * @param string|null $xsdPath
+     * @param  string      $xmlPath
+     * @param  string|null $xsdPath
      * @return bool
      */
     public function isXMLFileValid(string $xmlPath, string $xsdPath = null): bool;
 
     /**
-     * @param string      $xml
-     * @param string|null $xsdPath
+     * @param  string      $xml
+     * @param  string|null $xsdPath
      * @return bool
      */
     public function isXMLStringValid(string $xml, string $xsdPath = null): bool;
