@@ -3,7 +3,7 @@
 namespace Hyperized\Xml;
 
 use DOMDocument;
-use ErrorException;
+use Exception;
 use Hyperized\Xml\Constants\ErrorMessages;
 use Hyperized\Xml\Constants\Strings;
 use Hyperized\Xml\Exceptions\FileCouldNotBeOpenedException;
@@ -113,7 +113,7 @@ final class Validator implements ValidatorInterface
     {
         try {
             $contents = file_get_contents($fileName);
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             throw new FileCouldNotBeOpenedException(ErrorMessages::NO_FILE_CONTENTS);
         }
         return '' ?: $contents;
