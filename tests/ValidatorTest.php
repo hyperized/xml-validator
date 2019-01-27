@@ -35,6 +35,10 @@ final class ValidatorTest extends TestCase
     /**
      * @var string
      */
+    private static $emptyXmlFile = __DIR__ . '/files/empty.xml';
+    /**
+     * @var string
+     */
     private static $version = Strings::VERSION;
     /**
      * @var string
@@ -141,10 +145,21 @@ final class ValidatorTest extends TestCase
      * @throws FileCouldNotBeOpenedException
      * @throws InvalidXml
      */
-    public function testEmptyXmlFile(): void
+    public function testNonExistentXmlFile(): void
     {
         $this->expectException(FileCouldNotBeOpenedException::class);
         $this->expectExceptionMessage(ErrorMessages::NO_FILE_CONTENTS);
         $this->validator->isXMLFileValid(static::$nonExistentFile);
+    }
+
+    /**
+     * @throws FileCouldNotBeOpenedException
+     * @throws InvalidXml
+     */
+    public function testEmptyXmlFile(): void
+    {
+        $this->expectException(InvalidXml::class);
+        $this->expectExceptionMessage(ErrorMessages::XML_EMPTY_TRIMMED);
+        $this->validator->isXMLFileValid(static::$emptyXmlFile);
     }
 }

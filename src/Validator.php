@@ -3,10 +3,12 @@
 namespace Hyperized\Xml;
 
 use DOMDocument;
+use ErrorException;
 use Hyperized\Xml\Constants\ErrorMessages;
 use Hyperized\Xml\Constants\Strings;
 use Hyperized\Xml\Exceptions\FileCouldNotBeOpenedException;
 use Hyperized\Xml\Exceptions\InvalidXml;
+
 
 /**
  * Class Validator
@@ -24,6 +26,7 @@ final class Validator implements ValidatorInterface
      * @var string
      */
     private $encoding = Strings::UTF_8;
+
 
     /**
      * @param  string      $xmlPath
@@ -113,10 +116,7 @@ final class Validator implements ValidatorInterface
         } catch (\Exception $exception) {
             throw new FileCouldNotBeOpenedException(ErrorMessages::NO_FILE_CONTENTS);
         }
-        if (!\is_string($contents)) {
-            throw new FileCouldNotBeOpenedException(ErrorMessages::NO_FILE_CONTENTS);
-        }
-        return $contents;
+        return '' ?: $contents;
     }
 
     /**
