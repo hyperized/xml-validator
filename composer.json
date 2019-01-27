@@ -25,7 +25,8 @@
     "povils/phpmnd": "^2.0",
     "bmitch/churn-php": "^1.0",
     "phan/phan": "^1.2",
-    "phpstan/phpstan": "^0.11.1"
+    "phpstan/phpstan": "^0.11.1",
+    "phpmd/phpmd" : "@stable"
   },
   "autoload": {
     "psr-4": {
@@ -39,12 +40,14 @@
   },
   "scripts": {
     "phan": "vendor/bin/phan --allow-polyfill-parser",
+    "phpmd": "vendor/bin/phpmd src text cyclomatic.xml",
     "phpcs": "vendor/bin/phpcs src --standard=PSR2",
     "phpcbf": "vendor/bin/phpcbf src",
     "phpmnd": "vendor/bin/phpmnd src",
     "churn": "vendor/bin/churn run src",
     "phpstan": "vendor/bin/phpstan --level=7  analyse src tests",
     "phan.bat": "vendor\\bin\\phan.bat --allow-polyfill-parser",
+    "phpmd.bat": "vendor\\bin\\phpmd.bat --strict src text cyclomatic.xml",
     "phpcs.bat": "vendor\\bin\\phpcs.bat src --standard=PSR2",
     "phpcbf.bat": "vendor\\bin\\phpcbf.bat src",
     "phpmnd.bat": "vendor\\bin\\phpmnd.bat src",

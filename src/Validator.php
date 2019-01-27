@@ -59,9 +59,7 @@ final class Validator implements ValidatorInterface
      */
     private function isXMLValid(string $xmlContent, string $xsdPath = null): bool
     {
-        if (trim($xmlContent) === '') {
-            throw new InvalidXml(ErrorMessages::XML_EMPTY_TRIMMED);
-        }
+        self::checkEmptyWhenTrimmed($xmlContent);
 
         libxml_use_internal_errors(true);
 
@@ -73,6 +71,27 @@ final class Validator implements ValidatorInterface
 
         $errors = libxml_get_errors();
         libxml_clear_errors();
+        self::parseErrors($errors);
+        return true;
+    }
+
+    /**
+     * @param  string $xmlContent
+     * @throws InvalidXml
+     */
+    private static function checkEmptyWhenTrimmed(string $xmlContent): void
+    {
+        if (trim($xmlContent) === '') {
+            throw new InvalidXml(ErrorMessages::XML_EMPTY_TRIMMED);
+        }
+    }
+
+    /**
+     * @param  array $errors
+     * @throws InvalidXml
+     */
+    private static function parseErrors(array $errors): void
+    {
         if (!empty($errors)) {
             $return = [];
             foreach ($errors as $error) {
@@ -80,7 +99,6 @@ final class Validator implements ValidatorInterface
             }
             throw new InvalidXml(implode(Strings::NEW_LINE, $return));
         }
-        return true;
     }
 
     /**
