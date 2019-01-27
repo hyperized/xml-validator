@@ -9,7 +9,6 @@ use Hyperized\Xml\Constants\Strings;
 use Hyperized\Xml\Exceptions\FileCouldNotBeOpenedException;
 use Hyperized\Xml\Exceptions\InvalidXml;
 
-
 /**
  * Class Validator
  *
