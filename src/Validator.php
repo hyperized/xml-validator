@@ -108,8 +108,9 @@ final class Validator implements ValidatorInterface
      */
     private static function getFileContent(string $fileName): string
     {
-        $contents = file_get_contents($fileName);
-        if (!\is_string($contents)) {
+        try {
+            $contents = file_get_contents($fileName);
+        } catch (\Exception $exception) {
             throw new FileCouldNotBeOpenedException(ErrorMessages::NO_FILE_CONTENTS);
         }
         return $contents;

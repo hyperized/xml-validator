@@ -25,6 +25,7 @@ script:
   - composer phpmnd
   - composer churn
   - composer phpstan
+  - composer phpmd
 
 after_script:
   - wget https://scrutinizer-ci.com/ocular.phar
