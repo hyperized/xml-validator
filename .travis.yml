@@ -19,10 +19,13 @@ install:
 
 script:
   - phpunit --coverage-clover=coverage.xml
-  - vendor/bin/phpcs src --standard=PSR2
-  - vendor/bin/phpcbf src
-  - vendor/bin/phpa src
-  - vendor/bin/phpmnd src
+  - composer phan
+  - composer phpcs
+  - composer phpcbf
+  - composer phpmnd
+  - composer churn
+  - composer phpstan
+  - composer phpmd
 
 after_script:
   - wget https://scrutinizer-ci.com/ocular.phar
