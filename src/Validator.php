@@ -115,7 +115,7 @@ final class Validator implements ValidatorInterface
         } catch (Exception $exception) {
             throw new FileCouldNotBeOpenedException(ErrorMessages::NO_FILE_CONTENTS);
         }
-        return '' ?: $contents;
+        return \is_string($contents) ? $contents : '';
     }
 
     /**
