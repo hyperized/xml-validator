@@ -1189,16 +1189,16 @@
         },
         {
             "name": "phan/phan",
-            "version": "1.2.4",
+            "version": "1.2.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phan/phan.git",
-                "reference": "bf1fc09b21e6bb64dca56d0e99a0f3099c00280a"
+                "reference": "c987c6621a8b7595320c851bd8553115e49436b1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phan/phan/zipball/bf1fc09b21e6bb64dca56d0e99a0f3099c00280a",
-                "reference": "bf1fc09b21e6bb64dca56d0e99a0f3099c00280a",
+                "url": "https://api.github.com/repos/phan/phan/zipball/c987c6621a8b7595320c851bd8553115e49436b1",
+                "reference": "c987c6621a8b7595320c851bd8553115e49436b1",
                 "shasum": ""
             },
             "require": {
@@ -1217,6 +1217,7 @@
             },
             "suggest": {
                 "ext-ast": "Needed for parsing ASTs (unless --use-fallback-parser is used). 1.0.1+ is recommended, php-ast ^0.1.5|^1.0.0 is needed.",
+                "ext-igbinary": "Improves performance of polyfill when ext-ast is unavailable",
                 "ext-tokenizer": "Needed for non-AST support and file/line-based suppressions."
             },
             "bin": [
@@ -1251,7 +1252,7 @@
                 "php",
                 "static"
             ],
-            "time": "2019-02-18T21:01:26+00:00"
+            "time": "2019-02-27T14:10:48+00:00"
         },
         {
             "name": "phar-io/manifest",
@@ -3126,16 +3127,16 @@
         },
         {
             "name": "symfony/console",
-            "version": "v4.2.3",
+            "version": "v4.2.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-                "reference": "1f0ad51dfde4da8a6070f06adc58b4e37cbb37a4"
+                "reference": "9dc2299a016497f9ee620be94524e6c0af0280a9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/console/zipball/1f0ad51dfde4da8a6070f06adc58b4e37cbb37a4",
-                "reference": "1f0ad51dfde4da8a6070f06adc58b4e37cbb37a4",
+                "url": "https://api.github.com/repos/symfony/console/zipball/9dc2299a016497f9ee620be94524e6c0af0280a9",
+                "reference": "9dc2299a016497f9ee620be94524e6c0af0280a9",
                 "shasum": ""
             },
             "require": {
@@ -3194,7 +3195,7 @@
             ],
             "description": "Symfony Console Component",
             "homepage": "https://symfony.com",
-            "time": "2019-01-25T14:35:16+00:00"
+            "time": "2019-02-23T15:17:42+00:00"
         },
         {
             "name": "symfony/contracts",
