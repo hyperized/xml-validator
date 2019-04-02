@@ -93,13 +93,18 @@ final class Validator implements ValidatorInterface
      */
     private static function parseErrors(?array $errors): void
     {
-        if ($errors !== null) {
-            array_map(
-                static function (LibXMLError $error): string {
-                    return trim($error->message);
-                }, $errors
+        if (!empty($errors)) {
+            $reduced = array_reduce(
+                $errors,
+                static function (
+                    $carry,
+                    LibXMLError $item
+                ): array {
+                    $carry[] = trim($item->message);
+                    return $carry;
+                }
             );
-            throw new InvalidXml(implode(Strings::NEW_LINE, $errors));
+            throw new InvalidXml(implode(Strings::NEW_LINE, $reduced));
         }
     }
 

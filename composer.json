@@ -41,6 +41,7 @@
     }
   },
   "scripts": {
+    "phpunit": "vendor/phpunit/phpunit/phpunit --configuration phpunit.xml.dist",
     "phan": "vendor/bin/phan --allow-polyfill-parser",
     "phpmd": "vendor/bin/phpmd --strict src text cyclomatic.xml",
     "phpcs": "vendor/bin/phpcs src --standard=PSR2",
