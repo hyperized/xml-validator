@@ -72,6 +72,7 @@ final class Validator implements ValidatorInterface
             $document->schemaValidate($xsdPath);
         }
         $errors = libxml_get_errors();
+        libxml_clear_errors();
         self::parseErrors($errors);
         return true;
     }
@@ -97,14 +98,17 @@ final class Validator implements ValidatorInterface
             $reduced = array_reduce(
                 $errors,
                 static function (
-                    $carry,
+                    ?array $carry,
                     LibXMLError $item
                 ): array {
                     $carry[] = trim($item->message);
                     return $carry;
                 }
             );
-            throw new InvalidXml(implode(Strings::NEW_LINE, $reduced));
+
+            if (!empty($reduced)) {
+                throw new InvalidXml(implode(Strings::NEW_LINE, $reduced));
+            }
         }
     }
 
