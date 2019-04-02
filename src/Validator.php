@@ -8,8 +8,8 @@ use Hyperized\Xml\Constants\ErrorMessages;
 use Hyperized\Xml\Constants\Strings;
 use Hyperized\Xml\Exceptions\FileCouldNotBeOpenedException;
 use Hyperized\Xml\Exceptions\InvalidXml;
-use LibXMLError;
 use function is_string;
+use LibXMLError;
 
 /**
  * Class Validator
@@ -71,9 +71,7 @@ final class Validator implements ValidatorInterface
         if (isset($xsdPath)) {
             $document->schemaValidate($xsdPath);
         }
-
         $errors = libxml_get_errors();
-        libxml_clear_errors();
         self::parseErrors($errors);
         return true;
     }
@@ -90,20 +88,18 @@ final class Validator implements ValidatorInterface
     }
 
     /**
-     * @param  array $errors
+     * @param  array|null $errors
      * @throws InvalidXml
      */
-    private static function parseErrors(array $errors): void
+    private static function parseErrors(?array $errors): void
     {
-        if (!empty($errors)) {
-            $return = [];
-            /**
-             * @var LibXMLError $error
-             */
-            foreach ($errors as $error) {
-                $return[] = trim($error->message);
-            }
-            throw new InvalidXml(implode(Strings::NEW_LINE, $return));
+        if ($errors !== null) {
+            array_map(
+                static function (LibXMLError $error): string {
+                    return trim($error->message);
+                }, $errors
+            );
+            throw new InvalidXml(implode(Strings::NEW_LINE, $errors));
         }
     }
 
