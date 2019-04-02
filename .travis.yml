@@ -30,7 +30,7 @@ script:
   - composer churn
   - composer phpstan
   - composer phpmd
-  - composer infected
+  - composer infection
 
 after_script:
   - wget https://scrutinizer-ci.com/ocular.phar
