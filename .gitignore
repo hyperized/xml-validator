@@ -4,3 +4,4 @@
 /.idea/
 /.php_cs.cache
 /infection.log
+/.phpunit.result.cache

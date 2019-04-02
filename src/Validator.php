@@ -8,6 +8,8 @@ use Hyperized\Xml\Constants\ErrorMessages;
 use Hyperized\Xml\Constants\Strings;
 use Hyperized\Xml\Exceptions\FileCouldNotBeOpenedException;
 use Hyperized\Xml\Exceptions\InvalidXml;
+use function is_string;
+use LibXMLError;
 
 /**
  * Class Validator
@@ -25,7 +27,6 @@ final class Validator implements ValidatorInterface
      * @var string
      */
     private $encoding = Strings::UTF_8;
-
 
     /**
      * @param  string      $xmlPath
@@ -47,7 +48,7 @@ final class Validator implements ValidatorInterface
      */
     public function isXMLStringValid(string $xml, string $xsdPath = null): bool
     {
-        if (\is_string($xsdPath)) {
+        if (is_string($xsdPath)) {
             return $this->isXMLValid($xml, $xsdPath);
         }
         return $this->isXMLValid($xml);
@@ -70,7 +71,6 @@ final class Validator implements ValidatorInterface
         if (isset($xsdPath)) {
             $document->schemaValidate($xsdPath);
         }
-
         $errors = libxml_get_errors();
         libxml_clear_errors();
         self::parseErrors($errors);
@@ -89,17 +89,26 @@ final class Validator implements ValidatorInterface
     }
 
     /**
-     * @param  array $errors
+     * @param  array|null $errors
      * @throws InvalidXml
      */
-    private static function parseErrors(array $errors): void
+    private static function parseErrors(?array $errors): void
     {
         if (!empty($errors)) {
-            $return = [];
-            foreach ($errors as $error) {
-                $return[] = trim($error->message);
+            $reduced = array_reduce(
+                $errors,
+                static function (
+                    ?array $carry,
+                    LibXMLError $item
+                ): array {
+                    $carry[] = trim($item->message);
+                    return $carry;
+                }
+            );
+
+            if (!empty($reduced)) {
+                throw new InvalidXml(implode(Strings::NEW_LINE, $reduced));
             }
-            throw new InvalidXml(implode(Strings::NEW_LINE, $return));
         }
     }
 
@@ -115,7 +124,7 @@ final class Validator implements ValidatorInterface
         } catch (Exception $exception) {
             throw new FileCouldNotBeOpenedException(ErrorMessages::NO_FILE_CONTENTS);
         }
-        return \is_string($contents) ? $contents : '';
+        return is_string($contents) ? $contents : '';
     }
 
     /**

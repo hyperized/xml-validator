@@ -27,7 +27,8 @@
     "phan/phan": "^1.2",
     "phpstan/phpstan": "^0.11.1",
     "phpmd/phpmd": "@stable",
-    "infection/infection": "^0.12.2"
+    "infection/infection": "^0.12.2",
+    "vimeo/psalm": "^3.2"
   },
   "autoload": {
     "psr-4": {
@@ -40,6 +41,7 @@
     }
   },
   "scripts": {
+    "phpunit": "vendor/phpunit/phpunit/phpunit --configuration phpunit.xml.dist",
     "phan": "vendor/bin/phan --allow-polyfill-parser",
     "phpmd": "vendor/bin/phpmd --strict src text cyclomatic.xml",
     "phpcs": "vendor/bin/phpcs src --standard=PSR2",
@@ -48,6 +50,7 @@
     "churn": "vendor/bin/churn run src",
     "phpstan": "vendor/bin/phpstan --level=7  analyse src tests",
     "infection": "vendor/bin/infection",
+    "psalm": "vendor/bin/psalm",
     "phan.bat": "vendor\\bin\\phan.bat --allow-polyfill-parser",
     "phpmd.bat": "vendor\\bin\\phpmd.bat --strict src text cyclomatic.xml",
     "phpcs.bat": "vendor\\bin\\phpcs.bat src --standard=PSR2",
@@ -55,6 +58,7 @@
     "phpmnd.bat": "vendor\\bin\\phpmnd.bat src",
     "churn.bat": "vendor\\bin\\churn.bat run src",
     "phpstan.bat": "vendor\\bin\\phpstan.bat --level=7 analyse src tests",
-    "infection.bat": "vendor\\bin\\infection.bat"
+    "infection.bat": "vendor\\bin\\infection.bat",
+    "psalm.bat": "vendor\\bin\\psalm.bat"
   }
 }
