@@ -31,6 +31,7 @@ script:
   - composer phpstan
   - composer phpmd
   - composer infection
+  - composer psalm
 
 after_script:
   - wget https://scrutinizer-ci.com/ocular.phar

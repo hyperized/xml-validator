@@ -8,6 +8,8 @@ use Hyperized\Xml\Constants\ErrorMessages;
 use Hyperized\Xml\Constants\Strings;
 use Hyperized\Xml\Exceptions\FileCouldNotBeOpenedException;
 use Hyperized\Xml\Exceptions\InvalidXml;
+use LibXMLError;
+use function is_string;
 
 /**
  * Class Validator
@@ -25,7 +27,6 @@ final class Validator implements ValidatorInterface
      * @var string
      */
     private $encoding = Strings::UTF_8;
-
 
     /**
      * @param  string      $xmlPath
@@ -47,7 +48,7 @@ final class Validator implements ValidatorInterface
      */
     public function isXMLStringValid(string $xml, string $xsdPath = null): bool
     {
-        if (\is_string($xsdPath)) {
+        if (is_string($xsdPath)) {
             return $this->isXMLValid($xml, $xsdPath);
         }
         return $this->isXMLValid($xml);
@@ -96,6 +97,9 @@ final class Validator implements ValidatorInterface
     {
         if (!empty($errors)) {
             $return = [];
+            /**
+             * @var LibXMLError $error
+             */
             foreach ($errors as $error) {
                 $return[] = trim($error->message);
             }
@@ -115,7 +119,7 @@ final class Validator implements ValidatorInterface
         } catch (Exception $exception) {
             throw new FileCouldNotBeOpenedException(ErrorMessages::NO_FILE_CONTENTS);
         }
-        return \is_string($contents) ? $contents : '';
+        return is_string($contents) ? $contents : '';
     }
 
     /**
