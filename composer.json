@@ -27,7 +27,7 @@
     "phan/phan": "^1.2",
     "phpstan/phpstan": "^0.11.1",
     "phpmd/phpmd": "@stable",
-    "infection/infection": "^0.12.2",
+    "infection/infection": "^0.12.2 || ^0.13.0",
     "vimeo/psalm": "^3.2"
   },
   "autoload": {
