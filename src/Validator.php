@@ -3,11 +3,14 @@
 namespace Hyperized\Xml;
 
 use DOMDocument;
-use Exception;
 use Hyperized\Xml\Constants\ErrorMessages;
 use Hyperized\Xml\Constants\Strings;
 use Hyperized\Xml\Exceptions\FileCouldNotBeOpenedException;
 use Hyperized\Xml\Exceptions\InvalidXml;
+use Hyperized\Xml\Exceptions\EmptyFile;
+use Hyperized\Xml\Exceptions\FileDoesNotExist;
+use Hyperized\Xml\Types\Files\Xml;
+use Hyperized\Xml\Types\Files\Xsd;
 use function is_string;
 use LibXMLError;
 
@@ -28,30 +31,46 @@ final class Validator implements ValidatorInterface
      */
     private $encoding = Strings::UTF_8;
 
-    /**
-     * @param  string      $xmlPath
-     * @param  string|null $xsdPath
-     * @return bool
-     * @throws FileCouldNotBeOpenedException
-     * @throws InvalidXml
-     */
     public function isXMLFileValid(string $xmlPath, string $xsdPath = null): bool
     {
-        return $this->isXMLStringValid(self::getFileContent($xmlPath), $xsdPath);
+        try {
+            $string = (new Xml($xmlPath))
+                ->getContents();
+        } catch (EmptyFile $e) {
+            return false;
+        } catch (FileCouldNotBeOpenedException $e) {
+            return false;
+        } catch (FileDoesNotExist $e) {
+            return false;
+        }
+
+        if ($xsdPath !== null) {
+            try {
+                $xsdPath = (new Xsd($xsdPath))
+                    ->getPath();
+            } catch (FileDoesNotExist $e) {
+                return false;
+            }
+        }
+
+        return $this->isXMLStringValid($string, $xsdPath);
     }
 
     /**
      * @param  string      $xml
      * @param  string|null $xsdPath
      * @return bool
-     * @throws InvalidXml
      */
     public function isXMLStringValid(string $xml, string $xsdPath = null): bool
     {
-        if (is_string($xsdPath)) {
-            return $this->isXMLValid($xml, $xsdPath);
+        try {
+            if (is_string($xsdPath)) {
+                return $this->isXMLValid($xml, $xsdPath);
+            }
+            return $this->isXMLValid($xml);
+        } catch (InvalidXml $e) {
+            return false;
         }
-        return $this->isXMLValid($xml);
     }
 
     /**
@@ -110,22 +129,6 @@ final class Validator implements ValidatorInterface
                 throw new InvalidXml(implode(Strings::NEW_LINE, $reduced));
             }
         }
-    }
-
-    /**
-     * @param  string $fileName
-     * @return string
-     * @throws FileCouldNotBeOpenedException
-     */
-    private static function getFileContent(string $fileName): string
-    {
-        try {
-            $contents = file_get_contents($fileName);
-        } catch (Exception $exception) {
-            throw new FileCouldNotBeOpenedException(ErrorMessages::NO_FILE_CONTENTS);
-        }
-
-        return !$contents ? $contents : '';
     }
 
     /**

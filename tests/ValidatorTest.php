@@ -2,12 +2,10 @@
 
 namespace Hyperized\Xml\Tests;
 
-use Hyperized\Xml\Constants\ErrorMessages;
 use Hyperized\Xml\Constants\Strings;
-use Hyperized\Xml\Exceptions\FileCouldNotBeOpenedException;
-use Hyperized\Xml\Exceptions\InvalidXml;
 use Hyperized\Xml\Validator;
 use PHPUnit\Framework\TestCase;
+use function is_string;
 
 /**
  * Class ValidatorTest
@@ -49,11 +47,14 @@ final class ValidatorTest extends TestCase
      */
     private $validator;
 
-
     public function setUp(): void
     {
         $this->validator = new Validator();
     }
+
+    /**
+     * Encoding validations
+     */
 
     public function testVersion(): void
     {
@@ -68,98 +69,76 @@ final class ValidatorTest extends TestCase
     }
 
     /**
-     * @throws FileCouldNotBeOpenedException
-     * @throws InvalidXml
+     * String validations
      */
+
+    public function testValidXMLString(): void
+    {
+        $contents = file_get_contents(static::$xmlFile);
+        if (is_string($contents)) {
+            self::assertTrue($this->validator->isXMLStringValid($contents));
+        }
+    }
+
+    public function testInvalidXMLString(): void
+    {
+        $contents = file_get_contents(static::$incorrectXmlFile);
+        if (is_string($contents)) {
+            self::assertFalse($this->validator->isXMLStringValid($contents));
+        }
+    }
+
+    public function testEmptyXMLString(): void
+    {
+        self::assertFalse($this->validator->isXMLStringValid(''));
+    }
+
+    /**
+     * File validations- XML
+     */
+
     public function testValidXMLFile(): void
     {
         self::assertTrue($this->validator->isXMLFileValid(static::$xmlFile));
     }
 
-    /**
-     * @throws InvalidXml
-     */
-    public function testValidXMLString(): void
+    public function testNonExistentXmlFile(): void
     {
-        $contents = file_get_contents(static::$xmlFile);
-        if (\is_string($contents)) {
-            self::assertTrue($this->validator->isXMLStringValid($contents));
-        }
+        self::assertFalse($this->validator->isXMLFileValid(static::$nonExistentFile));
+    }
+
+    public function testFileGetContentsFalse(): void
+    {
+        stream_wrapper_register('invalid', InvalidStreamWrapper::class);
+        self::assertFalse(@$this->validator->isXMLFileValid('invalid://foobar'));
+    }
+
+    public function testEmptyXmlFile(): void
+    {
+        self::assertFalse($this->validator->isXMLFileValid(static::$emptyXmlFile));
+    }
+
+    public function testInvalidXMLFile(): void
+    {
+        self::assertFalse($this->validator->isXMLFileValid(static::$incorrectXmlFile));
     }
 
     /**
-     * @throws InvalidXml
+     * File validations- XML with XSD
      */
-    public function testInvalidXMLString(): void
-    {
-        $this->expectException(InvalidXml::class);
-        $this->expectExceptionMessage(ErrorMessages::XML_NO_NAME);
-        $contents = file_get_contents(static::$incorrectXmlFile);
-        if(\is_string($contents)) {
-            $this->validator->isXMLStringValid($contents);
-        }
-    }
 
-    /**
-     * @throws InvalidXml
-     */
-    public function testEmptyXMLString(): void
-    {
-        $this->expectException(InvalidXml::class);
-        $this->expectExceptionMessage(ErrorMessages::XML_EMPTY_TRIMMED);
-        $this->validator->isXMLStringValid('');
-    }
-
-    /**
-     * @throws FileCouldNotBeOpenedException
-     * @throws InvalidXml
-     */
     public function testValidXSDFile(): void
     {
         self::assertTrue($this->validator->isXMLFileValid(static::$xmlFile, static::$xsdFile));
     }
 
-    /**
-     * @throws FileCouldNotBeOpenedException
-     * @throws InvalidXml
-     */
-    public function testInvalidXMLFile(): void
+    public function testNonExistentXSDFile(): void
     {
-        $this->expectException(InvalidXml::class);
-        $this->expectExceptionMessage(ErrorMessages::XML_NO_NAME);
-        $this->validator->isXMLFileValid(static::$incorrectXmlFile);
+        self::assertFalse($this->validator->isXMLFileValid(static::$xmlFile, static::$nonExistentFile));
     }
 
-    /**
-     * @throws FileCouldNotBeOpenedException
-     * @throws InvalidXml
-     */
     public function testInvalidXSDFile(): void
     {
-        $this->expectException(InvalidXml::class);
-        $this->expectExceptionMessage(ErrorMessages::XML_NO_NAME);
-        $this->validator->isXMLFileValid(static::$incorrectXmlFile, static::$xsdFile);
-    }
-
-    /**
-     * @throws FileCouldNotBeOpenedException
-     * @throws InvalidXml
-     */
-    public function testNonExistentXmlFile(): void
-    {
-        $this->expectException(FileCouldNotBeOpenedException::class);
-        $this->expectExceptionMessage(ErrorMessages::NO_FILE_CONTENTS);
-        $this->validator->isXMLFileValid(static::$nonExistentFile);
-    }
-
-    /**
-     * @throws FileCouldNotBeOpenedException
-     * @throws InvalidXml
-     */
-    public function testEmptyXmlFile(): void
-    {
-        $this->expectException(InvalidXml::class);
-        $this->expectExceptionMessage(ErrorMessages::XML_EMPTY_TRIMMED);
-        $this->validator->isXMLFileValid(static::$emptyXmlFile);
+        self::assertFalse($this->validator->isXMLFileValid(static::$incorrectXmlFile, static::$xsdFile));
     }
 }
