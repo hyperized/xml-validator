@@ -18,7 +18,7 @@ class InvalidStreamWrapper
     }
 
     /**
-     * @return bool
+     * @return array
      */
     public function url_stat(): array
     {
