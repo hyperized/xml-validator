@@ -9,6 +9,7 @@ use Hyperized\Xml\Exceptions\FileDoesNotExist;
 
 /**
  * Class File
+ *
  * @package Hyperized\Xml\Types\Xml
  */
 class File

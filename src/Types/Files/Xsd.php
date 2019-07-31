@@ -6,6 +6,7 @@ use Hyperized\Xml\Types\File;
 
 /**
  * Class Xsd
+ *
  * @package Hyperized\Xml\Types\Files
  */
 class Xsd extends File

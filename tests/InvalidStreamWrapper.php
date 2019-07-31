@@ -4,6 +4,7 @@ namespace Hyperized\Xml\Tests;
 
 /**
  * Class InvalidStreamWrapper
+ *
  * @package Hyperized\Xml\Types
  */
 class InvalidStreamWrapper

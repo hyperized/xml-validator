@@ -6,9 +6,9 @@ use Exception;
 
 /**
  * Class EmptyFile
+ *
  * @package Hyperized\Xml\Exceptions
  */
 class EmptyFile extends Exception
 {
-
 }

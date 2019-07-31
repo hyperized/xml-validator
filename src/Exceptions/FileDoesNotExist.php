@@ -6,6 +6,7 @@ use Exception;
 
 /**
  * Class FileDoesNotExist
+ *
  * @package Hyperized\Xml\Exceptions
  */
 class FileDoesNotExist extends Exception

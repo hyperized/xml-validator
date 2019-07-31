@@ -6,6 +6,7 @@ use Hyperized\Xml\Types\File;
 
 /**
  * Class Xml
+ *
  * @package Hyperized\Xml\Types\Files
  */
 class Xml extends File
