@@ -57,8 +57,8 @@ final class Validator implements ValidatorInterface
     }
 
     /**
-     * @param string $xml
-     * @param string|null $xsdPath
+     * @param  string      $xml
+     * @param  string|null $xsdPath
      * @return bool
      */
     public function isXMLStringValid(string $xml, string $xsdPath = null): bool
@@ -74,8 +74,8 @@ final class Validator implements ValidatorInterface
     }
 
     /**
-     * @param string $xmlContent
-     * @param string|null $xsdPath
+     * @param  string      $xmlContent
+     * @param  string|null $xsdPath
      * @return bool
      * @throws InvalidXml
      */
@@ -97,7 +97,7 @@ final class Validator implements ValidatorInterface
     }
 
     /**
-     * @param string $xmlContent
+     * @param  string $xmlContent
      * @throws InvalidXml
      */
     private static function checkEmptyWhenTrimmed(string $xmlContent): void
@@ -108,7 +108,7 @@ final class Validator implements ValidatorInterface
     }
 
     /**
-     * @param array|null $errors
+     * @param  array|null $errors
      * @throws InvalidXml
      */
     private static function parseErrors(?array $errors): void

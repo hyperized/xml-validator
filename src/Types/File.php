@@ -21,7 +21,8 @@ class File
 
     /**
      * File constructor.
-     * @param string $path
+     *
+     * @param  string $path
      * @throws FileDoesNotExist
      */
     public function __construct(string $path)
