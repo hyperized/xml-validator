@@ -53,7 +53,7 @@ class File
         $contents = @file_get_contents($this->path);
 
         if ($contents === false) {
-            throw new FileCouldNotBeOpenedException(ErrorMessages::NO_FILE_CONTENTS);
+            throw new FileCouldNotBeOpenedException(ErrorMessages::FILE_COULD_NOT_BE_OPENED);
         }
 
         if ($contents === '') {
