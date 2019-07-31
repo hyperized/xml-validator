@@ -50,7 +50,7 @@ class File
      */
     public function getContents(): string
     {
-        $contents = @file_get_contents($this->path);
+        $contents = file_get_contents($this->path);
 
         if ($contents === false) {
             throw new FileCouldNotBeOpenedException(ErrorMessages::FILE_COULD_NOT_BE_OPENED);

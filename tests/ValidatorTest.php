@@ -110,7 +110,7 @@ final class ValidatorTest extends TestCase
     public function testFileGetContentsFalse(): void
     {
         stream_wrapper_register('invalid', InvalidStreamWrapper::class);
-        self::assertFalse($this->validator->isXMLFileValid('invalid://foobar'));
+        self::assertFalse(@$this->validator->isXMLFileValid('invalid://foobar'));
     }
 
     public function testEmptyXmlFile(): void
