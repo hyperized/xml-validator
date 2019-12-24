@@ -18,7 +18,7 @@ class InvalidStreamWrapper
     }
 
     /**
-     * @return array
+     * @return array<string>
      */
     public function url_stat(): array
     {

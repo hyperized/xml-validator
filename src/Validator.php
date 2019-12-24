@@ -108,7 +108,7 @@ final class Validator implements ValidatorInterface
     }
 
     /**
-     * @param  array|null $errors
+     * @param  array<LibXMLError>|null $errors
      * @throws InvalidXml
      */
     private static function parseErrors(?array $errors): void
