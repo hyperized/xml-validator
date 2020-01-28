@@ -1,0 +1,55 @@
+name: Run tests
+
+on: [push]
+
+jobs:
+  unit-tests:
+    strategy:
+      fail-fast: false
+      matrix:
+        php: [7.2, 7.3, 7.4]
+        dependency-version: [prefer-lowest, prefer-stable]
+        os: [ubuntu-latest]
+        test: [phpunit, phan, phpmd, phpcs, phpcbf, phpmnd, churn, phpstan, infection, psalm]
+    name: ${{ matrix.test }} on PHP${{ matrix.php }} with ${{ matrix.dependency-version }} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v1
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v1
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: dom, libxml, mbstring
+          tools: prestissimo
+          coverage: xdebug
+      - name: Composer update
+        run: |
+          composer update --${{ matrix.dependency-version }} --prefer-dist --no-interaction --no-suggest
+      - name: Composer test
+        run: |
+          composer test-${{ matrix.test }}-${{ matrix.os }}
+
+  coverage:
+    name: PHPUnit test coverage
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v1
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v1
+        with:
+          php-version: 7.4
+          extensions: dom, libxml
+          tools: prestissimo, phpunit
+          coverage: xdebug
+      - name: Composer update
+        run: |
+          composer update --prefer-dist --no-interaction --no-suggest
+      - name: Get coverage
+        run: |
+          phpunit --coverage-clover=coverage.xml
+      - name: Send coverage report
+        run: |
+          wget https://scrutinizer-ci.com/ocular.phar
+          php ocular.phar code-coverage:upload --format=php-clover coverage.xml
