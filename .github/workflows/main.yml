@@ -19,14 +19,14 @@ jobs:
         uses: shivammathur/setup-php@v1
         with:
           php-version: ${{ matrix.php }}
-          extensions: dom, libxml
+          extensions: dom, libxml, mbstring
           tools: prestissimo
       - name: Composer update
         run: |
           composer update --dev --${{ matrix.dependency-version }} --prefer-dist --no-interaction --no-suggest
       - name: Composer test
         run: |
-          composer test-${{ matrix.os }}
+          composer test-${{ matrix.test }}-${{ matrix.os }}
 
   coverage:
     name: PHPUnit test coverage
