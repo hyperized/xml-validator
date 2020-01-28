@@ -10,7 +10,7 @@ jobs:
         dependency-version: [prefer-lowest, prefer-stable]
         os: [windows-latest, ubuntu-latest, macos-latest]
         test: [phpunit, phan, phpmd, phpcs, phpcbf, phpmnd, churn, phpstan, infection, psalm]
-    name: PHP${{ matrix.php }} with ${{ matrix.dependency-version }} on ${{ matrix.os }}
+    name: ${{ matrix.test }} on PHP${{ matrix.php }} with ${{ matrix.dependency-version }} on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout code
@@ -21,6 +21,7 @@ jobs:
           php-version: ${{ matrix.php }}
           extensions: dom, libxml, mbstring
           tools: prestissimo
+          coverage: pcov
       - name: Composer update
         run: |
           composer update --${{ matrix.dependency-version }} --prefer-dist --no-interaction --no-suggest

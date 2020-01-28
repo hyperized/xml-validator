@@ -134,7 +134,7 @@
       "@phpcs.bat"
     ],
     "test-phpcbf-windows-latest": [
-      "@phpcbf.bat"
+      "@phpcbf.bat -vv"
     ],
     "test-phpmnd-windows-latest": [
       "@phpmnd.bat"
