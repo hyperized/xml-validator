@@ -9,6 +9,7 @@ jobs:
         php: [7.2, 7.3, 7.4]
         dependency-version: [prefer-lowest, prefer-stable]
         os: [windows-latest, ubuntu-latest, macos-latest]
+        test: [phpunit, phan, phpmd, phpcs, phpcbf, phpmnd, churn, phpstan, infection, psalm]
     name: PHP${{ matrix.php }} with ${{ matrix.dependency-version }} on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     steps:
@@ -20,13 +21,26 @@ jobs:
           php-version: ${{ matrix.php }}
           extensions: dom, libxml
           tools: prestissimo
-          coverage: xdebug
       - name: Composer update
         run: |
           composer update --dev --${{ matrix.dependency-version }} --prefer-dist --no-interaction --no-suggest
       - name: Composer test
         run: |
           composer test-${{ matrix.os }}
+
+  coverage:
+    name: PHPUnit test coverage
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v1
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v1
+        with:
+          php-version: 7.4
+          extensions: dom, libxml
+          tools: prestissimo, phpunit
+          coverage: xdebug
       - name: Get coverage
         run: |
           phpunit --coverage-clover=coverage.xml
