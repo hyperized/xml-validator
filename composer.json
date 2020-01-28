@@ -42,39 +42,39 @@
   },
   "scripts": {
     "test-ubuntu-latest": [
-      "@phpunit"
-      "@phan"
-      "@phpmd"
-      "@phpcs"
-      "@phpcbf"
-      "@phpmnd"
-      "@churn"
-      "@phpstan"
-      "@infection"
+      "@phpunit",
+      "@phan",
+      "@phpmd",
+      "@phpcs",
+      "@phpcbf",
+      "@phpmnd",
+      "@churn",
+      "@phpstan",
+      "@infection",
       "@psalm"
     ],
     "test-macos-latest": [
-      "@phpunit"
-      "@phan"
-      "@phpmd"
-      "@phpcs"
-      "@phpcbf"
-      "@phpmnd"
-      "@churn"
-      "@phpstan"
-      "@infection"
+      "@phpunit",
+      "@phan",
+      "@phpmd",
+      "@phpcs",
+      "@phpcbf",
+      "@phpmnd",
+      "@churn",
+      "@phpstan",
+      "@infection",
       "@psalm"
     ],
     "test-windows-latest": [
-      "@phpunit.bat"
-      "@phan.bat"
-      "@phpmd.bat"
-      "@phpcs.bat"
-      "@phpcbf.bat"
-      "@phpmnd.bat"
-      "@churn.bat"
-      "@phpstan.bat"
-      "@infection.bat"
+      "@phpunit.bat",
+      "@phan.bat",
+      "@phpmd.bat",
+      "@phpcs.bat",
+      "@phpcbf.bat",
+      "@phpmnd.bat",
+      "@churn.bat",
+      "@phpstan.bat",
+      "@infection.bat",
       "@psalm.bat"
     ],
     "phpunit": "vendor/phpunit/phpunit/phpunit --configuration phpunit.xml.dist",

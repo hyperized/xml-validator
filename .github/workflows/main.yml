@@ -27,3 +27,10 @@ jobs:
       - name: Composer test
         run: |
           composer test-${{ matrix.os }}
+      - name: Get coverage
+        run: |
+          phpunit --coverage-clover=coverage.xml
+      - name: Send coverage report
+        run: |
+          wget https://scrutinizer-ci.com/ocular.phar
+          php ocular.phar code-coverage:upload --format=php-clover coverage.xml
