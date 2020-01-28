@@ -41,7 +41,7 @@
     }
   },
   "scripts": {
-    "test-linux-latest": [
+    "test-ubuntu-latest": [
       "@phpunit"
       "@phan"
       "@phpmd"
