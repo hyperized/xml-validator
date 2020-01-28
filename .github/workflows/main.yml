@@ -23,7 +23,7 @@ jobs:
           tools: prestissimo
       - name: Composer update
         run: |
-          composer update --dev --${{ matrix.dependency-version }} --prefer-dist --no-interaction --no-suggest
+          composer update --${{ matrix.dependency-version }} --prefer-dist --no-interaction --no-suggest
       - name: Composer test
         run: |
           composer test-${{ matrix.test }}-${{ matrix.os }}
@@ -41,6 +41,9 @@ jobs:
           extensions: dom, libxml
           tools: prestissimo, phpunit
           coverage: xdebug
+      - name: Composer update
+        run: |
+          composer update --prefer-dist --no-interaction --no-suggest
       - name: Get coverage
         run: |
           phpunit --coverage-clover=coverage.xml
