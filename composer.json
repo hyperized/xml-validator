@@ -17,8 +17,7 @@
   "require": {
     "php": ">=7.2",
     "ext-libxml": "^7.2",
-    "ext-dom": "20031129",
-
+    "ext-dom": "20031129"
   },
   "require-dev": {
     "ext-mbstring": "^7.2",
