@@ -21,9 +21,9 @@ jobs:
           extensions: dom, libxml
           tools: prestissimo
           coverage: xdebug
-      - name: Composer install
+      - name: Composer update
         run: |
-          composer install --dev --${{ matrix.dependency-version }} --prefer-dist --no-interaction --no-suggest
+          composer update --dev --${{ matrix.dependency-version }} --prefer-dist --no-interaction --no-suggest
       - name: Composer test
         run: |
           composer test-${{ matrix.os }}
