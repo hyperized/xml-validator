@@ -8,7 +8,7 @@ jobs:
       matrix:
         php: [7.2, 7.3, 7.4]
         dependency-version: [prefer-lowest, prefer-stable]
-        os: [windows-latest, ubuntu-latest, macos-latest]
+        os: [ubuntu-latest]
         test: [phpunit, phan, phpmd, phpcs, phpcbf, phpmnd, churn, phpstan, infection, psalm]
     name: ${{ matrix.test }} on PHP${{ matrix.php }} with ${{ matrix.dependency-version }} on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}

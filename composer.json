@@ -120,32 +120,6 @@
     ],
     "test-psalm-macos-latest": [
       "@psalm"
-    ],
-    "test-phpunit-windows-latest": [
-      "@phpunit.bat"
-    ],
-    "test-phan-windows-latest": [
-      "@phan.bat"
-    ],
-    "test-phpmd-windows-latest": [
-      "@phpmd.bat"
-    ],
-    "test-phpcs-windows-latest": [],
-    "test-phpcbf-windows-latest": [],
-    "test-phpmnd-windows-latest": [
-      "@phpmnd.bat"
-    ],
-    "test-churn-windows-latest": [
-      "@churn.bat"
-    ],
-    "test-phpstan-windows-latest": [
-      "@phpstan.bat"
-    ],
-    "test-infection-windows-latest": [
-      "@infection.bat"
-    ],
-    "test-psalm-windows-latest": [
-      "@psalm.bat"
     ]
   }
 }
