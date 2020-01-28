@@ -5,6 +5,7 @@ on: [push]
 jobs:
   unit-tests:
     strategy:
+      fail-fast: false
       matrix:
         php: [7.2, 7.3, 7.4]
         dependency-version: [prefer-lowest, prefer-stable]
