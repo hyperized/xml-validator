@@ -21,7 +21,7 @@ jobs:
           php-version: ${{ matrix.php }}
           extensions: dom, libxml, mbstring
           tools: prestissimo
-          coverage: pcov
+          coverage: xdebug
       - name: Composer update
         run: |
           composer update --${{ matrix.dependency-version }} --prefer-dist --no-interaction --no-suggest
