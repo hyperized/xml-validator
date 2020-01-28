@@ -130,9 +130,7 @@
     "test-phpmd-windows-latest": [
       "@phpmd.bat"
     ],
-    "test-phpcs-windows-latest": [
-      "@phpcs.bat"
-    ],
+    "test-phpcs-windows-latest": [],
     "test-phpcbf-windows-latest": [],
     "test-phpmnd-windows-latest": [
       "@phpmnd.bat"
