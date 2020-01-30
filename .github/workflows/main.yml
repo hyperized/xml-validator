@@ -23,6 +23,9 @@ jobs:
           extensions: dom, libxml, mbstring
           tools: prestissimo
           coverage: xdebug
+      - name: Composer self-update
+        run: |
+          composer self-update
       - name: Composer update
         run: |
           composer update --${{ matrix.dependency-version }} --prefer-dist --no-interaction --no-suggest
@@ -43,6 +46,9 @@ jobs:
           extensions: dom, libxml
           tools: prestissimo, phpunit
           coverage: xdebug
+      - name: Composer self-update
+        run: |
+          composer self-update
       - name: Composer update
         run: |
           composer update --prefer-dist --no-interaction --no-suggest
