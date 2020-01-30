@@ -29,7 +29,7 @@ jobs:
       - name: Composer update
         run: |
           composer update --${{ matrix.dependency-version }} --prefer-dist --no-interaction --no-suggest
-      - name: Composer test
+      - name: Composer test-${{ matrix.test }}-${{ matrix.os }}
         run: |
           composer test-${{ matrix.test }}-${{ matrix.os }}
 
