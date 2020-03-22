@@ -1,6 +1,6 @@
 # [hyperized/xml-validator](https://packagist.org/packages/hyperized/xml-validator)
 
-[![Buy us a tree](https://img.shields.io/badge/Treeware-%F0%9F%8C%B3-lightgreen?style=for-the-badge)](https://offset.earth/treeware?gift-trees) ![Run tests](https://github.com/hyperized/xml-validator/workflows/Run%20tests/badge.svg) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/hyperized/xml-validator/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/hyperized/xml-validator/?branch=master) [![Code Coverage](https://scrutinizer-ci.com/g/hyperized/xml-validator/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/hyperized/xml-validator/?branch=master) [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fhyperized%2Fxml-validator.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fhyperized%2Fxml-validator?ref=badge_shield) [![License](https://poser.pugx.org/hyperized/xml-validator/license)](https://packagist.org/packages/hyperized/xml-validator)
+[![Buy us a tree](https://img.shields.io/badge/Treeware-%F0%9F%8C%B3-lightgreen)](https://plant.treeware.earth/hyperized/xml-validator) ![Run tests](https://github.com/hyperized/xml-validator/workflows/Run%20tests/badge.svg) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/hyperized/xml-validator/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/hyperized/xml-validator/?branch=master) [![Code Coverage](https://scrutinizer-ci.com/g/hyperized/xml-validator/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/hyperized/xml-validator/?branch=master) [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fhyperized%2Fxml-validator.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fhyperized%2Fxml-validator?ref=badge_shield) [![License](https://poser.pugx.org/hyperized/xml-validator/license)](https://packagist.org/packages/hyperized/xml-validator)
 
 A simple PHP XML validator.
 
@@ -49,7 +49,7 @@ You're free to use this package, but if it makes it to your production environme
 
 It’s now common knowledge that one of the best tools to tackle the climate crisis and keep our temperatures from rising above 1.5C is to <a href="https://www.bbc.co.uk/news/science-environment-48870920">plant trees</a>. If you support this package and contribute to the Treeware forest you’ll be creating employment for local families and restoring wildlife habitats.
 
-You can buy trees here [offset.earth/treeware](https://offset.earth/treeware?gift-trees)
+You can buy trees here [offset.earth/treeware](https://plant.treeware.earth/hyperized/xml-validator)
 
 Read more about Treeware at [treeware.earth](http://treeware.earth)
 
