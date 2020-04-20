@@ -1,12 +1,11 @@
 {
   "name": "hyperized/xml-validator",
+  "type": "library",
   "description": "A simple PHP XML validator",
   "keywords": [
     "xml",
     "validator"
   ],
-  "type": "library",
-  "minimum-stability": "stable",
   "license": "MIT",
   "authors": [
     {
@@ -16,19 +15,20 @@
   ],
   "require": {
     "php": ">=7.2",
-    "ext-libxml": "^7.2",
-    "ext-dom": "20031129"
+    "ext-dom": "20031129",
+    "ext-libxml": "^7.2"
   },
   "require-dev": {
     "ext-mbstring": "^7.2",
-    "phpunit/phpunit": "^7 || ^8",
-    "squizlabs/php_codesniffer": "^3.5",
-    "povils/phpmnd": "^2.0",
     "bmitch/churn-php": "^1.0.3",
-    "phan/phan": "^2.4",
-    "phpstan/phpstan": "^0.12.0",
-    "phpmd/phpmd": "@stable",
+    "ergebnis/composer-normalize": "^2.3",
     "infection/infection": "^0.15.0",
+    "phan/phan": "^2.4",
+    "phpmd/phpmd": "@stable",
+    "phpstan/phpstan": "^0.12.0",
+    "phpunit/phpunit": "^7 || ^8 || ^9",
+    "povils/phpmnd": "^2.0",
+    "squizlabs/php_codesniffer": "^3.5",
     "vimeo/psalm": "^3.8"
   },
   "autoload": {
@@ -41,84 +41,85 @@
       "Hyperized\\Xml\\Tests\\": "tests/"
     }
   },
+  "minimum-stability": "stable",
   "scripts": {
-    "phpunit": "vendor/phpunit/phpunit/phpunit --configuration phpunit.xml.dist",
-    "phan": "vendor/bin/phan --allow-polyfill-parser",
-    "phpmd": "vendor/bin/phpmd --strict src text cyclomatic.xml",
-    "phpcs": "vendor/bin/phpcs src --standard=PSR2",
-    "phpcbf": "vendor/bin/phpcbf src",
-    "phpmnd": "vendor/bin/phpmnd src",
     "churn": "vendor/bin/churn run src",
-    "phpstan": "vendor/bin/phpstan --level=7  analyse src tests",
-    "infection": "vendor/bin/infection",
-    "psalm": "vendor/bin/psalm",
-    "phan.bat": "vendor\\bin\\phan.bat --allow-polyfill-parser",
-    "phpmd.bat": "vendor\\bin\\phpmd.bat --strict src text cyclomatic.xml",
-    "phpcs.bat": "vendor\\bin\\phpcs.bat src --standard=PSR2",
-    "phpcbf.bat": "vendor\\bin\\phpcbf.bat src",
-    "phpmnd.bat": "vendor\\bin\\phpmnd.bat src",
     "churn.bat": "vendor\\bin\\churn.bat run src",
-    "phpstan.bat": "vendor\\bin\\phpstan.bat --level=7 analyse src tests",
+    "infection": "vendor/bin/infection",
     "infection.bat": "vendor\\bin\\infection.bat",
+    "phan": "vendor/bin/phan --allow-polyfill-parser",
+    "phan.bat": "vendor\\bin\\phan.bat --allow-polyfill-parser",
+    "phpcbf": "vendor/bin/phpcbf src",
+    "phpcbf.bat": "vendor\\bin\\phpcbf.bat src",
+    "phpcs": "vendor/bin/phpcs src --standard=PSR2",
+    "phpcs.bat": "vendor\\bin\\phpcs.bat src --standard=PSR2",
+    "phpmd": "vendor/bin/phpmd --strict src text cyclomatic.xml",
+    "phpmd.bat": "vendor\\bin\\phpmd.bat --strict src text cyclomatic.xml",
+    "phpmnd": "vendor/bin/phpmnd src",
+    "phpmnd.bat": "vendor\\bin\\phpmnd.bat src",
+    "phpstan": "vendor/bin/phpstan --level=7  analyse src tests",
+    "phpstan.bat": "vendor\\bin\\phpstan.bat --level=7 analyse src tests",
+    "phpunit": "vendor/phpunit/phpunit/phpunit --configuration phpunit.xml.dist",
+    "psalm": "vendor/bin/psalm",
     "psalm.bat": "vendor\\bin\\psalm.bat",
-    "test-phpunit-ubuntu-latest": [
-      "@phpunit"
-    ],
-    "test-phan-ubuntu-latest": [
-      "@phan"
-    ],
-    "test-phpmd-ubuntu-latest": [
-      "@phpmd"
-    ],
-    "test-phpcs-ubuntu-latest": [
-      "@phpcs"
-    ],
-    "test-phpcbf-ubuntu-latest": [
-      "@phpcbf"
-    ],
-    "test-phpmnd-ubuntu-latest": [
-      "@phpmnd"
+    "test-churn-macos-latest": [
+      "@churn"
     ],
     "test-churn-ubuntu-latest": [
       "@churn"
     ],
-    "test-phpstan-ubuntu-latest": [
-      "@phpstan"
+    "test-infection-macos-latest": [
+      "@infection"
     ],
     "test-infection-ubuntu-latest": [
       "@infection"
     ],
-    "test-psalm-ubuntu-latest": [
-      "@psalm"
-    ],
-    "test-phpunit-macos-latest": [
-      "@phpunit"
-    ],
     "test-phan-macos-latest": [
       "@phan"
     ],
-    "test-phpmd-macos-latest": [
-      "@phpmd"
-    ],
-    "test-phpcs-macos-latest": [
-      "@phpcs"
+    "test-phan-ubuntu-latest": [
+      "@phan"
     ],
     "test-phpcbf-macos-latest": [
       "@phpcbf"
     ],
+    "test-phpcbf-ubuntu-latest": [
+      "@phpcbf"
+    ],
+    "test-phpcs-macos-latest": [
+      "@phpcs"
+    ],
+    "test-phpcs-ubuntu-latest": [
+      "@phpcs"
+    ],
+    "test-phpmd-macos-latest": [
+      "@phpmd"
+    ],
+    "test-phpmd-ubuntu-latest": [
+      "@phpmd"
+    ],
     "test-phpmnd-macos-latest": [
       "@phpmnd"
     ],
-    "test-churn-macos-latest": [
-      "@churn"
+    "test-phpmnd-ubuntu-latest": [
+      "@phpmnd"
     ],
     "test-phpstan-macos-latest": [
       "@phpstan"
     ],
-    "test-infection-macos-latest": [
-      "@infection"
+    "test-phpstan-ubuntu-latest": [
+      "@phpstan"
+    ],
+    "test-phpunit-macos-latest": [
+      "@phpunit"
+    ],
+    "test-phpunit-ubuntu-latest": [
+      "@phpunit"
     ],
     "test-psalm-macos-latest": [
+      "@psalm"
+    ],
+    "test-psalm-ubuntu-latest": [
       "@psalm"
     ]
   }
