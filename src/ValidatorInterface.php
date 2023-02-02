@@ -16,7 +16,7 @@ interface ValidatorInterface
      * @param  string|null $xsdPath
      * @return bool
      */
-    public function isXMLFileValid(string $xmlPath, string $xsdPath = null, bool $returnError = false): bool|string
+    public function isXMLFileValid(string $xmlPath, string $xsdPath = null, bool $returnError = false): bool|string;
 
     /**
      * @param  string      $xml
