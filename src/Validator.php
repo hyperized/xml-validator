@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Hyperized\Xml;
 
@@ -31,7 +33,7 @@ final class Validator implements ValidatorInterface
      */
     private $encoding = Strings::UTF_8;
 
-    public function isXMLFileValid(string $xmlPath, string $xsdPath = null): bool
+    public function isXMLFileValid(string $xmlPath, string $xsdPath = null, bool $returnError = false): bool|string
     {
         try {
             $string = (new Xml($xmlPath))
@@ -53,15 +55,16 @@ final class Validator implements ValidatorInterface
             }
         }
 
-        return $this->isXMLStringValid($string, $xsdPath);
+        return $this->isXMLStringValid($string, $xsdPath, $returnError);
     }
 
     /**
      * @param  string      $xml
      * @param  string|null $xsdPath
+     * @param  bool $returnError
      * @return bool
      */
-    public function isXMLStringValid(string $xml, string $xsdPath = null): bool
+    public function isXMLStringValid(string $xml, string $xsdPath = null, bool $returnError = false): bool|string
     {
         try {
             if (is_string($xsdPath)) {
@@ -69,6 +72,9 @@ final class Validator implements ValidatorInterface
             }
             return $this->isXMLValid($xml);
         } catch (InvalidXml $e) {
+            if (true === $returnError) {
+                return $e->getMessage();
+            }
             return false;
         }
     }
