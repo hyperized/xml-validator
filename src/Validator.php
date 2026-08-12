@@ -5,106 +5,82 @@ declare(strict_types=1);
 namespace Hyperized\Xml;
 
 use DOMDocument;
-use Exception;
 use Hyperized\Xml\Constants\ErrorMessages;
 use Hyperized\Xml\Constants\Strings;
-use Hyperized\Xml\Exceptions\EmptyFile;
-use Hyperized\Xml\Exceptions\FileCouldNotBeOpenedException;
-use Hyperized\Xml\Exceptions\FileDoesNotExist;
 use Hyperized\Xml\Exceptions\InvalidXml;
+use Hyperized\Xml\Exceptions\XmlValidatorException;
 use Hyperized\Xml\Types\Files\Xml;
 use Hyperized\Xml\Types\Files\Xsd;
 use LibXMLError;
 
-use function is_string;
-
 /**
- * Class Validator
- *
- * @package Hyperized\Xml
  * Based on: http://stackoverflow.com/a/30058598/1757763
  */
 final class Validator implements ValidatorInterface
 {
-    /**
-     * @var string
-     */
-    private string $version = Strings::VERSION;
-    /**
-     * @var string
-     */
-    private string $encoding = Strings::UTF_8;
+    public function __construct(
+        private string $version = Strings::VERSION,
+        private string $encoding = Strings::UTF_8
+    ) {
+    }
 
-    private Exception $exception;
-
-    public function isXMLFileValid(string $xmlPath, string $xsdPath = null): bool
+    public function isXMLFileValid(string $xmlPath, ?string $xsdPath = null): bool
     {
         try {
-            $string = ( new Xml($xmlPath) )->getContents();
+            $this->validateXMLFile($xmlPath, $xsdPath);
+
+            return true;
+        } catch (XmlValidatorException) {
+            return false;
+        }
+    }
+
+    public function isXMLStringValid(string $xml, ?string $xsdPath = null): bool
+    {
+        try {
+            $this->validateXMLString($xml, $xsdPath);
+
+            return true;
+        } catch (XmlValidatorException) {
+            return false;
+        }
+    }
+
+    public function validateXMLFile(string $xmlPath, ?string $xsdPath = null): void
+    {
+        $this->validateXMLString((new Xml($xmlPath))->getContents(), $xsdPath);
+    }
+
+    public function validateXMLString(string $xml, ?string $xsdPath = null): void
+    {
+        self::checkEmptyWhenTrimmed($xml);
+
+        // Resolve the schema up front so a missing XSD reports as FileDoesNotExist
+        // rather than surfacing as a libxml parse error about the document.
+        if ($xsdPath !== null) {
+            $xsdPath = (new Xsd($xsdPath))->getPath();
+        }
+
+        // libxml error handling is process-global, so put it back the way we
+        // found it instead of leaving every later consumer with it switched on.
+        $previous = libxml_use_internal_errors(true);
+
+        try {
+            $document = new DOMDocument($this->version, $this->encoding);
+            $document->loadXML($xml);
+
             if ($xsdPath !== null) {
-                $xsdPath = ( new Xsd($xsdPath) )->getPath();
-            }
-        } catch (FileDoesNotExist | FileCouldNotBeOpenedException | EmptyFile $exception) {
-            $this->exception = $exception;
-
-            return false;
-        }
-
-        return $this->isXMLStringValid($string, $xsdPath);
-    }
-
-    public function throwError(): void
-    {
-        throw $this->exception;
-    }
-
-    /**
-     * @param string $xml
-     * @param string|null $xsdPath
-     *
-     * @return bool
-     */
-    public function isXMLStringValid(string $xml, string $xsdPath = null): bool
-    {
-        try {
-            if (is_string($xsdPath)) {
-                return $this->isXMLValid($xml, $xsdPath);
+                $document->schemaValidate($xsdPath);
             }
 
-            return $this->isXMLValid($xml);
-        } catch (InvalidXml) {
-            return false;
+            self::parseErrors(libxml_get_errors());
+        } finally {
+            libxml_clear_errors();
+            libxml_use_internal_errors($previous);
         }
     }
 
     /**
-     * @param string $xmlContent
-     * @param string|null $xsdPath
-     *
-     * @return bool
-     * @throws InvalidXml
-     */
-    private function isXMLValid(string $xmlContent, string $xsdPath = null): bool
-    {
-        self::checkEmptyWhenTrimmed($xmlContent);
-
-        libxml_use_internal_errors(true);
-
-        $document = new DOMDocument($this->version, $this->encoding);
-        $document->loadXML($xmlContent);
-        if (isset($xsdPath)) {
-            $document->schemaValidate($xsdPath);
-        }
-        $errors = libxml_get_errors();
-        libxml_clear_errors();
-        self::parseErrors($errors);
-
-        return true;
-    }
-
-    /**
-     * @param string $xmlContent
-     *
      * @throws InvalidXml
      */
     private static function checkEmptyWhenTrimmed(string $xmlContent): void
@@ -115,58 +91,39 @@ final class Validator implements ValidatorInterface
     }
 
     /**
-     * @param array<LibXMLError>|null $errors
+     * @param list<LibXMLError> $errors
      *
      * @throws InvalidXml
      */
-    private static function parseErrors(?array $errors): void
+    private static function parseErrors(array $errors): void
     {
-        if (! empty($errors)) {
-            $reduced = array_reduce(
-                $errors,
-                static function (
-                    ?array $carry,
-                    LibXMLError $item
-                ): array {
-                    $carry[] = trim($item->message);
-
-                    return $carry;
-                }
-            );
-
-            if (! empty($reduced)) {
-                throw new InvalidXml(implode(Strings::NEW_LINE, $reduced));
-            }
+        if ($errors === []) {
+            return;
         }
+
+        $messages = array_map(
+            static fn (LibXMLError $error): string => trim($error->message),
+            $errors
+        );
+
+        throw new InvalidXml(implode(Strings::NEW_LINE, $messages), $errors);
     }
 
-    /**
-     * @return string
-     */
     public function getVersion(): string
     {
         return $this->version;
     }
 
-    /**
-     * @param string $version
-     */
     public function setVersion(string $version): void
     {
         $this->version = $version;
     }
 
-    /**
-     * @return string
-     */
     public function getEncoding(): string
     {
         return $this->encoding;
     }
 
-    /**
-     * @param string $encoding
-     */
     public function setEncoding(string $encoding): void
     {
         $this->encoding = $encoding;

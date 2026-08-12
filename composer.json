@@ -14,19 +14,16 @@
     }
   ],
   "require": {
-    "php": "^8.1|^8.2|^8.3",
+    "php": "^8.3",
     "ext-dom": "*",
     "ext-libxml": "*"
   },
   "require-dev": {
-    "ext-mbstring": "*",
-    "bmitch/churn-php": "^1.7",
-    "ergebnis/composer-normalize": "^2",
-    "phan/phan": "^5.4",
-    "phpmd/phpmd": "@stable",
-    "phpstan/phpstan": "^1.11",
-    "phpunit/phpunit": "^11",
-    "squizlabs/php_codesniffer": "^3.9"
+    "ergebnis/composer-normalize": "^2.52",
+    "phpmd/phpmd": "^2.15",
+    "phpstan/phpstan": "^2.2",
+    "phpunit/phpunit": "^12.5",
+    "squizlabs/php_codesniffer": "^4.0.2"
   },
   "minimum-stability": "stable",
   "autoload": {
@@ -41,74 +38,24 @@
   },
   "config": {
     "allow-plugins": {
-      "ergebnis/composer-normalize": true,
-      "ocramius/package-versions": true
+      "ergebnis/composer-normalize": true
     }
   },
   "scripts": {
-    "churn": "vendor/bin/churn run src",
-    "churn.bat": "vendor\\bin\\churn.bat run src",
-    "phan": "vendor/bin/phan --allow-polyfill-parser",
-    "phan.bat": "vendor\\bin\\phan.bat --allow-polyfill-parser",
-    "phpcbf": "vendor/bin/phpcbf --standard=PSR12 src",
-    "phpcbf.bat": "vendor\\bin\\phpcbf.bat --standard=PSR12 src",
-    "phpcs": "vendor/bin/phpcs src --standard=PSR12",
-    "phpcs.bat": "vendor\\bin\\phpcs.bat src --standard=PSR12",
+    "audit-lock": "composer audit --locked",
+    "phpcbf": "vendor/bin/phpcbf",
+    "phpcs": "vendor/bin/phpcs",
     "phpmd": "vendor/bin/phpmd --strict src text cyclomatic.xml",
-    "phpmd.bat": "vendor\\bin\\phpmd.bat --strict src text cyclomatic.xml",
-    "phpstan": "vendor/bin/phpstan --level=max  analyse src tests",
-    "phpstan.bat": "vendor\\bin\\phpstan.bat --level=max analyse src tests",
-    "phpunit": "XDEBUG_MODE=coverage vendor/phpunit/phpunit/phpunit --configuration phpunit.xml.dist",
+    "phpstan": "vendor/bin/phpstan analyse",
+    "phpunit": "XDEBUG_MODE=coverage vendor/bin/phpunit --configuration phpunit.xml.dist",
     "test": [
-      "@churn",
-      "@phan",
-      "@phpcbf",
       "@phpcs",
       "@phpmd",
       "@phpstan",
       "@phpunit"
     ],
-    "test-churn-macos-latest": [
-      "@churn"
-    ],
-    "test-churn-ubuntu-latest": [
-      "@churn"
-    ],
-    "test-phan-macos-latest": [
-      "@phan"
-    ],
-    "test-phan-ubuntu-latest": [
-      "@phan"
-    ],
-    "test-phpcbf-macos-latest": [
-      "@phpcbf"
-    ],
-    "test-phpcbf-ubuntu-latest": [
-      "@phpcbf"
-    ],
-    "test-phpcs-macos-latest": [
-      "@phpcs"
-    ],
-    "test-phpcs-ubuntu-latest": [
-      "@phpcs"
-    ],
-    "test-phpmd-macos-latest": [
-      "@phpmd"
-    ],
-    "test-phpmd-ubuntu-latest": [
-      "@phpmd"
-    ],
-    "test-phpstan-macos-latest": [
-      "@phpstan"
-    ],
-    "test-phpstan-ubuntu-latest": [
-      "@phpstan"
-    ],
-    "test-phpunit-macos-latest": [
-      "@phpunit"
-    ],
-    "test-phpunit-ubuntu-latest": [
-      "@phpunit"
+    "test-github": [
+      "@test"
     ]
   }
 }

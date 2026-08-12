@@ -1,0 +1,12 @@
+parameters:
+    level: max
+    paths:
+        - src
+        - tests
+        - example.php
+    # Analyse against the whole supported range, so syntax or functions that
+    # only exist in a newer PHP are caught here instead of in a consumer's
+    # 8.3 runtime.
+    phpVersion:
+        min: 80300
+        max: 80599

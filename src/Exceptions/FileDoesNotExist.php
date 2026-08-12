@@ -4,13 +4,11 @@ declare(strict_types=1);
 
 namespace Hyperized\Xml\Exceptions;
 
-use Exception;
+use RuntimeException;
 
 /**
- * Class FileDoesNotExist
- *
- * @package Hyperized\Xml\Exceptions
+ * No file at the given path.
  */
-class FileDoesNotExist extends Exception
+final class FileDoesNotExist extends RuntimeException implements XmlValidatorException
 {
 }

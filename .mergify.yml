@@ -1,8 +1,17 @@
 pull_request_rules:
-  - name: automatic merge on new dependency
+  - name: automatic approval for Dependabot pull requests
     conditions:
       - author=dependabot[bot]
-      - status-success=continuous-integration/travis-ci/pr
+    actions:
+      review:
+        type: APPROVE
+        message: Automatically approving dependabot
+
+  - name: automatic merge on dependabot pull requests
+    conditions:
+      - author=dependabot[bot]
+      - check-success~=^test*
+      - check-success=Composer audit
     actions:
       merge:
         method: merge

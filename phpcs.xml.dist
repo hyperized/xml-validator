@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<ruleset name="xml-validator">
+    <description>PSR-12 across source and tests.</description>
+
+    <file>src</file>
+    <file>tests</file>
+    <file>example.php</file>
+
+    <rule ref="PSR12"/>
+
+    <!--
+        PHP's stream wrapper contract fixes these method names, so they cannot
+        be camelCase without the wrapper ceasing to work.
+    -->
+    <rule ref="PSR1.Methods.CamelCapsMethodName.NotCamelCaps">
+        <exclude-pattern>tests/InvalidStreamWrapper.php</exclude-pattern>
+    </rule>
+</ruleset>

@@ -1,114 +1,289 @@
-<?php declare( strict_types=1 );
+<?php
+
+declare(strict_types=1);
 
 namespace Hyperized\Xml\Tests;
 
-use Exception;
+use Hyperized\Xml\Constants\ErrorMessages;
 use Hyperized\Xml\Constants\Strings;
+use Hyperized\Xml\Exceptions\EmptyFile;
+use Hyperized\Xml\Exceptions\FileCouldNotBeOpenedException;
 use Hyperized\Xml\Exceptions\FileDoesNotExist;
+use Hyperized\Xml\Exceptions\InvalidXml;
+use Hyperized\Xml\Types\File;
+use Hyperized\Xml\Types\Files\Xml;
+use Hyperized\Xml\Types\Files\Xsd;
 use Hyperized\Xml\Validator;
-use PHPUnit\Framework\TestCase;
-use function is_string;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\UsesClass;
 
-/**
- * Class ValidatorTest
- *
- * @package Hyperized\Xml\Validator\Tests
- */
-final class ValidatorTest extends TestCase {
+#[CoversClass(Validator::class)]
+#[UsesClass(File::class)]
+#[UsesClass(Xml::class)]
+#[UsesClass(Xsd::class)]
+#[UsesClass(InvalidXml::class)]
+#[UsesClass(EmptyFile::class)]
+#[UsesClass(FileDoesNotExist::class)]
+#[UsesClass(FileCouldNotBeOpenedException::class)]
+final class ValidatorTest extends TestCase
+{
+    private Validator $validator;
 
-	private static string $xsdFile = __DIR__ . '/files/simple.xsd';
-	private static string $xmlFile = __DIR__ . '/files/correct.xml';
-	private static string $incorrectXmlFile = __DIR__ . '/files/incorrect.xml';
-	private static string $nonExistentFile = __DIR__ . '/files/does_not_exist.xml';
-	private static string $emptyXmlFile = __DIR__ . '/files/empty.xml';
-	private static string $version = Strings::VERSION;
-	private static string $encoding = Strings::UTF_8;
-	private Validator $validator;
+    protected function setUp(): void
+    {
+        $this->validator = new Validator();
+    }
 
-	public function setUp(): void {
-		$this->validator = new Validator();
-	}
+    protected function tearDown(): void
+    {
+        InvalidStreamWrapper::unregister();
+    }
 
-	/**
-	 * Encoding validations
-	 */
-	public function testVersion(): void {
-		$this->validator->setVersion( ValidatorTest::$version );
-		self::assertEquals( ValidatorTest::$version, $this->validator->getVersion() );
-	}
+    /**
+     * Configuration
+     */
+    public function testDefaultsToXmlVersionOneAndUtf8(): void
+    {
+        self::assertSame(Strings::VERSION, $this->validator->getVersion());
+        self::assertSame(Strings::UTF_8, $this->validator->getEncoding());
+    }
 
-	public function testEncoding(): void {
-		$this->validator->setEncoding( ValidatorTest::$encoding );
-		self::assertEquals( ValidatorTest::$encoding, $this->validator->getEncoding() );
-	}
+    public function testAcceptsVersionAndEncodingThroughTheConstructor(): void
+    {
+        $validator = new Validator('1.1', 'iso-8859-1');
 
-	/**
-	 * String validations
-	 */
-	public function testValidXMLString(): void {
-		$contents = file_get_contents( ValidatorTest::$xmlFile );
-		if ( is_string( $contents ) ) {
-			self::assertTrue( $this->validator->isXMLStringValid( $contents ) );
-		}
-	}
+        self::assertSame('1.1', $validator->getVersion());
+        self::assertSame('iso-8859-1', $validator->getEncoding());
+    }
 
-	public function testInvalidXMLString(): void {
-		$contents = file_get_contents( ValidatorTest::$incorrectXmlFile );
-		if ( is_string( $contents ) ) {
-			self::assertFalse( $this->validator->isXMLStringValid( $contents ) );
-		}
-	}
+    public function testVersionCanBeChanged(): void
+    {
+        $this->validator->setVersion('1.1');
 
-	public function testEmptyXMLString(): void {
-		self::assertFalse( $this->validator->isXMLStringValid( '' ) );
-	}
+        self::assertSame('1.1', $this->validator->getVersion());
+    }
 
-	/**
-	 * File validations- XML
-	 */
-	public function testValidXMLFile(): void {
-		self::assertTrue( $this->validator->isXMLFileValid( ValidatorTest::$xmlFile ) );
-	}
+    public function testEncodingCanBeChanged(): void
+    {
+        $this->validator->setEncoding('iso-8859-1');
 
-	public function testNonExistentXmlFile(): void {
-		self::assertFalse( $this->validator->isXMLFileValid( ValidatorTest::$nonExistentFile ) );
-	}
+        self::assertSame('iso-8859-1', $this->validator->getEncoding());
+    }
 
-	public function testFileGetContentsFalse(): void {
-		stream_wrapper_register( 'invalid', InvalidStreamWrapper::class );
-		self::assertFalse( @$this->validator->isXMLFileValid( 'invalid://foobar' ) );
-	}
+    /**
+     * String predicates
+     */
+    public function testValidXmlStringIsValid(): void
+    {
+        self::assertTrue($this->validator->isXMLStringValid(self::fixture('correct.xml')));
+    }
 
-	public function testEmptyXmlFile(): void {
-		self::assertFalse( $this->validator->isXMLFileValid( ValidatorTest::$emptyXmlFile ) );
-	}
+    public function testValidXmlStringIsValidAgainstItsSchema(): void
+    {
+        self::assertTrue($this->validator->isXMLStringValid(
+            self::fixture('correct.xml'),
+            self::fixturePath('simple.xsd')
+        ));
+    }
 
-	public function testInvalidXMLFile(): void {
-		self::assertFalse( $this->validator->isXMLFileValid( ValidatorTest::$incorrectXmlFile ) );
-	}
+    public function testMalformedXmlStringIsNotValid(): void
+    {
+        self::assertFalse($this->validator->isXMLStringValid(self::fixture('incorrect.xml')));
+    }
 
-	/**
-	 * File validations- XML with XSD
-	 */
-	public function testValidXSDFile(): void {
-		self::assertTrue( $this->validator->isXMLFileValid( ValidatorTest::$xmlFile, ValidatorTest::$xsdFile ) );
-	}
+    public function testWellFormedXmlStringViolatingItsSchemaIsNotValid(): void
+    {
+        self::assertFalse($this->validator->isXMLStringValid(
+            self::fixture('schema-violation.xml'),
+            self::fixturePath('simple.xsd')
+        ));
+    }
 
-	public function testNonExistentXSDFile(): void {
-		self::assertFalse( $this->validator->isXMLFileValid( ValidatorTest::$xmlFile, ValidatorTest::$nonExistentFile ) );
-	}
+    public function testEmptyXmlStringIsNotValid(): void
+    {
+        self::assertFalse($this->validator->isXMLStringValid(''));
+    }
 
-	public function testInvalidXSDFile(): void {
-		self::assertFalse( $this->validator->isXMLFileValid( ValidatorTest::$incorrectXmlFile, ValidatorTest::$xsdFile ) );
-	}
+    public function testWhitespaceOnlyXmlStringIsNotValid(): void
+    {
+        self::assertFalse($this->validator->isXMLStringValid("  \n\t  "));
+    }
 
-	/**
-	 * Verify Exceptions
-	 * @throws Exception
-	 */
-	public function testThrowError(): void {
-		$this->expectException(FileDoesNotExist::class);
-		$this->validator->isXMLFileValid( ValidatorTest::$xmlFile, ValidatorTest::$nonExistentFile);
-		$this->validator->throwError();
-	}
+    public function testXmlStringIsNotValidWhenTheSchemaIsMissing(): void
+    {
+        self::assertFalse($this->validator->isXMLStringValid(
+            self::fixture('correct.xml'),
+            self::fixturePath('does_not_exist.xsd')
+        ));
+    }
+
+    /**
+     * File predicates
+     */
+    public function testValidXmlFileIsValid(): void
+    {
+        self::assertTrue($this->validator->isXMLFileValid(self::fixturePath('correct.xml')));
+    }
+
+    public function testValidXmlFileIsValidAgainstItsSchema(): void
+    {
+        self::assertTrue($this->validator->isXMLFileValid(
+            self::fixturePath('correct.xml'),
+            self::fixturePath('simple.xsd')
+        ));
+    }
+
+    public function testMalformedXmlFileIsNotValid(): void
+    {
+        self::assertFalse($this->validator->isXMLFileValid(self::fixturePath('incorrect.xml')));
+    }
+
+    public function testMissingXmlFileIsNotValid(): void
+    {
+        self::assertFalse($this->validator->isXMLFileValid(self::fixturePath('does_not_exist.xml')));
+    }
+
+    public function testEmptyXmlFileIsNotValid(): void
+    {
+        self::assertFalse($this->validator->isXMLFileValid(self::fixturePath('empty.xml')));
+    }
+
+    public function testUnreadableXmlFileIsNotValid(): void
+    {
+        InvalidStreamWrapper::register();
+
+        self::assertFalse(@$this->validator->isXMLFileValid(InvalidStreamWrapper::SCHEME . '://unreadable'));
+    }
+
+    public function testXmlFileIsNotValidWhenTheSchemaIsMissing(): void
+    {
+        self::assertFalse($this->validator->isXMLFileValid(
+            self::fixturePath('correct.xml'),
+            self::fixturePath('does_not_exist.xsd')
+        ));
+    }
+
+    /**
+     * Throwing variants report why
+     */
+    public function testValidateXmlStringReturnsQuietlyForValidXml(): void
+    {
+        $xml = self::fixture('correct.xml');
+
+        $this->validator->validateXMLString($xml);
+
+        self::assertTrue($this->validator->isXMLStringValid($xml));
+    }
+
+    public function testValidateXmlStringRejectsMalformedXml(): void
+    {
+        $this->expectException(InvalidXml::class);
+
+        $this->validator->validateXMLString(self::fixture('incorrect.xml'));
+    }
+
+    public function testValidateXmlStringRejectsAnEmptyDocument(): void
+    {
+        $this->expectException(InvalidXml::class);
+        $this->expectExceptionMessage(ErrorMessages::XML_EMPTY_TRIMMED);
+
+        $this->validator->validateXMLString('   ');
+    }
+
+    public function testValidateXmlStringReportsAMissingSchemaAsAMissingFile(): void
+    {
+        $this->expectException(FileDoesNotExist::class);
+        $this->expectExceptionMessage(ErrorMessages::FILE_DOES_NOT_EXIST);
+
+        $this->validator->validateXMLString(
+            self::fixture('correct.xml'),
+            self::fixturePath('does_not_exist.xsd')
+        );
+    }
+
+    public function testValidateXmlFileReturnsQuietlyForValidXml(): void
+    {
+        $path = self::fixturePath('correct.xml');
+
+        $this->validator->validateXMLFile($path, self::fixturePath('simple.xsd'));
+
+        self::assertTrue($this->validator->isXMLFileValid($path));
+    }
+
+    public function testValidateXmlFileRejectsAMissingFile(): void
+    {
+        $this->expectException(FileDoesNotExist::class);
+        $this->expectExceptionMessage(ErrorMessages::FILE_DOES_NOT_EXIST);
+
+        $this->validator->validateXMLFile(self::fixturePath('does_not_exist.xml'));
+    }
+
+    public function testValidateXmlFileRejectsAnEmptyFile(): void
+    {
+        $this->expectException(EmptyFile::class);
+        $this->expectExceptionMessage(ErrorMessages::EMPTY_FILE);
+
+        $this->validator->validateXMLFile(self::fixturePath('empty.xml'));
+    }
+
+    public function testValidateXmlFileRejectsAnUnreadableFile(): void
+    {
+        InvalidStreamWrapper::register();
+
+        $this->expectException(FileCouldNotBeOpenedException::class);
+        $this->expectExceptionMessage(ErrorMessages::FILE_COULD_NOT_BE_OPENED);
+
+        @$this->validator->validateXMLFile(InvalidStreamWrapper::SCHEME . '://unreadable');
+    }
+
+    public function testValidateXmlFileRejectsASchemaViolation(): void
+    {
+        $this->expectException(InvalidXml::class);
+
+        $this->validator->validateXMLFile(
+            self::fixturePath('schema-violation.xml'),
+            self::fixturePath('simple.xsd')
+        );
+    }
+
+    /**
+     * The validator keeps no error state, so an instance stays reusable and
+     * shareable. It also leaves libxml's process-global settings alone.
+     */
+    public function testAFailedCallDoesNotAffectTheNextOne(): void
+    {
+        self::assertFalse($this->validator->isXMLStringValid(self::fixture('incorrect.xml')));
+        self::assertTrue($this->validator->isXMLStringValid(self::fixture('correct.xml')));
+        self::assertFalse($this->validator->isXMLFileValid(self::fixturePath('does_not_exist.xml')));
+        self::assertTrue($this->validator->isXMLFileValid(self::fixturePath('correct.xml')));
+    }
+
+    public function testLibxmlInternalErrorHandlingIsRestoredAfterSuccess(): void
+    {
+        $before = libxml_use_internal_errors();
+
+        $this->validator->validateXMLString(self::fixture('correct.xml'));
+
+        self::assertSame($before, libxml_use_internal_errors());
+    }
+
+    public function testLibxmlInternalErrorHandlingIsRestoredAfterFailure(): void
+    {
+        $before = libxml_use_internal_errors();
+
+        self::assertFalse($this->validator->isXMLStringValid(self::fixture('incorrect.xml')));
+        self::assertSame($before, libxml_use_internal_errors());
+    }
+
+    public function testLibxmlInternalErrorHandlingIsRestoredWhenAlreadyEnabled(): void
+    {
+        $before = libxml_use_internal_errors(true);
+
+        try {
+            self::assertFalse($this->validator->isXMLStringValid(self::fixture('incorrect.xml')));
+            self::assertTrue(libxml_use_internal_errors());
+        } finally {
+            libxml_use_internal_errors($before);
+        }
+    }
 }
