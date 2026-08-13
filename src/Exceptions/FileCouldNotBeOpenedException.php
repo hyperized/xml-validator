@@ -1,14 +1,15 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Hyperized\Xml\Exceptions;
 
-use Exception;
+use RuntimeException;
 
 /**
- * Class FileCouldNotBeOpenedException
- *
- * @package Hyperized\Xml\Exceptions
+ * The path exists but reading it failed, for instance on a permission problem
+ * or a stream wrapper that refuses to open.
  */
-class FileCouldNotBeOpenedException extends Exception
+final class FileCouldNotBeOpenedException extends RuntimeException implements XmlValidatorException
 {
 }

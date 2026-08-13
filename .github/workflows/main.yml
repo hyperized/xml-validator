@@ -1,61 +1,59 @@
+---
 name: Run tests
 
-on: [push]
+on:
+  - push
 
 jobs:
   unit-tests:
     strategy:
       fail-fast: false
       matrix:
-        php: [7.2, 7.3, 7.4]
-        dependency-version: [prefer-lowest, prefer-stable]
-        os: [ubuntu-latest]
-        test: [phpunit, phan, phpmd, phpcs, phpcbf, phpmnd, churn, phpstan, infection, psalm]
+        php:
+          - 8.3
+          - 8.4
+          - 8.5
+        dependency-version:
+          - prefer-lowest
+          - prefer-stable
+        os:
+          - ubuntu-latest
+        test:
+          - test-github
+
     name: ${{ matrix.test }} on PHP${{ matrix.php }} with ${{ matrix.dependency-version }} on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v1
+        uses: actions/checkout@v7
       - name: Setup PHP
-        uses: shivammathur/setup-php@v1
+        uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
-          extensions: dom, libxml, mbstring
-          tools: prestissimo
-          coverage: xdebug
-      - name: Composer self-update
-        run: |
-          composer self-update
+          extensions: dom, libxml
+          coverage: pcov
       - name: Composer update
         run: |
-          composer update --${{ matrix.dependency-version }} --prefer-dist --no-interaction --no-suggest
-      - name: Composer test-${{ matrix.test }}-${{ matrix.os }}
+          composer update --${{ matrix.dependency-version }} --prefer-dist --no-interaction
+      - name: Composer ${{ matrix.test }}-${{ matrix.os }}
         run: |
-          composer test-${{ matrix.test }}-${{ matrix.os }}
+          composer ${{ matrix.test }}
 
-  coverage:
-    name: PHPUnit test coverage
+  security-audit:
+    # Audits the committed lock file, which is what Dependabot scans. Kept out of
+    # the matrix above because --prefer-lowest deliberately resolves to the oldest
+    # versions the constraints allow, which will always carry advisories.
+    name: Composer audit
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v1
+        uses: actions/checkout@v7
       - name: Setup PHP
-        uses: shivammathur/setup-php@v1
+        uses: shivammathur/setup-php@v2
         with:
-          php-version: 7.4
+          php-version: 8.3
           extensions: dom, libxml
-          tools: prestissimo, phpunit
-          coverage: xdebug
-      - name: Composer self-update
+          coverage: none
+      - name: Audit composer.lock
         run: |
-          composer self-update
-      - name: Composer update
-        run: |
-          composer update --prefer-dist --no-interaction --no-suggest
-      - name: Get coverage
-        run: |
-          phpunit --coverage-clover=coverage.xml
-      - name: Send coverage report
-        run: |
-          wget https://scrutinizer-ci.com/ocular.phar
-          php ocular.phar code-coverage:upload --format=php-clover coverage.xml
+          composer audit --locked

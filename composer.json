@@ -1,12 +1,12 @@
 {
   "name": "hyperized/xml-validator",
-  "type": "library",
   "description": "A simple PHP XML validator",
+  "license": "MIT",
+  "type": "library",
   "keywords": [
     "xml",
     "validator"
   ],
-  "license": "MIT",
   "authors": [
     {
       "name": "Gerben Geijteman",
@@ -14,23 +14,18 @@
     }
   ],
   "require": {
-    "php": ">=7.2",
-    "ext-dom": "20031129",
-    "ext-libxml": "^7.2 || ^8.0"
+    "php": "^8.3",
+    "ext-dom": "*",
+    "ext-libxml": "*"
   },
   "require-dev": {
-    "ext-mbstring": "^7.2",
-    "bmitch/churn-php": "^1.0.3",
-    "ergebnis/composer-normalize": "^2.3",
-    "infection/infection": "^0.15.0",
-    "phan/phan": "^2.4",
-    "phpmd/phpmd": "@stable",
-    "phpstan/phpstan": "^0.12.0",
-    "phpunit/phpunit": "^7 || ^8 || ^9",
-    "povils/phpmnd": "^2.0",
-    "squizlabs/php_codesniffer": "^3.5",
-    "vimeo/psalm": "^3.8"
+    "ergebnis/composer-normalize": "^2.52",
+    "phpmd/phpmd": "^2.15",
+    "phpstan/phpstan": "^2.2",
+    "phpunit/phpunit": "^12.5",
+    "squizlabs/php_codesniffer": "^4.0.2"
   },
+  "minimum-stability": "stable",
   "autoload": {
     "psr-4": {
       "Hyperized\\Xml\\": "src/"
@@ -41,86 +36,26 @@
       "Hyperized\\Xml\\Tests\\": "tests/"
     }
   },
-  "minimum-stability": "stable",
+  "config": {
+    "allow-plugins": {
+      "ergebnis/composer-normalize": true
+    }
+  },
   "scripts": {
-    "churn": "vendor/bin/churn run src",
-    "churn.bat": "vendor\\bin\\churn.bat run src",
-    "infection": "vendor/bin/infection",
-    "infection.bat": "vendor\\bin\\infection.bat",
-    "phan": "vendor/bin/phan --allow-polyfill-parser",
-    "phan.bat": "vendor\\bin\\phan.bat --allow-polyfill-parser",
-    "phpcbf": "vendor/bin/phpcbf src",
-    "phpcbf.bat": "vendor\\bin\\phpcbf.bat src",
-    "phpcs": "vendor/bin/phpcs src --standard=PSR2",
-    "phpcs.bat": "vendor\\bin\\phpcs.bat src --standard=PSR2",
+    "audit-lock": "composer audit --locked",
+    "phpcbf": "vendor/bin/phpcbf",
+    "phpcs": "vendor/bin/phpcs",
     "phpmd": "vendor/bin/phpmd --strict src text cyclomatic.xml",
-    "phpmd.bat": "vendor\\bin\\phpmd.bat --strict src text cyclomatic.xml",
-    "phpmnd": "vendor/bin/phpmnd src",
-    "phpmnd.bat": "vendor\\bin\\phpmnd.bat src",
-    "phpstan": "vendor/bin/phpstan --level=max  analyse src tests",
-    "phpstan.bat": "vendor\\bin\\phpstan.bat --level=max analyse src tests",
-    "phpunit": "vendor/phpunit/phpunit/phpunit --configuration phpunit.xml.dist",
-    "psalm": "vendor/bin/psalm",
-    "psalm.bat": "vendor\\bin\\psalm.bat",
-    "test-churn-macos-latest": [
-      "@churn"
-    ],
-    "test-churn-ubuntu-latest": [
-      "@churn"
-    ],
-    "test-infection-macos-latest": [
-      "@infection"
-    ],
-    "test-infection-ubuntu-latest": [
-      "@infection"
-    ],
-    "test-phan-macos-latest": [
-      "@phan"
-    ],
-    "test-phan-ubuntu-latest": [
-      "@phan"
-    ],
-    "test-phpcbf-macos-latest": [
-      "@phpcbf"
-    ],
-    "test-phpcbf-ubuntu-latest": [
-      "@phpcbf"
-    ],
-    "test-phpcs-macos-latest": [
-      "@phpcs"
-    ],
-    "test-phpcs-ubuntu-latest": [
-      "@phpcs"
-    ],
-    "test-phpmd-macos-latest": [
-      "@phpmd"
-    ],
-    "test-phpmd-ubuntu-latest": [
-      "@phpmd"
-    ],
-    "test-phpmnd-macos-latest": [
-      "@phpmnd"
-    ],
-    "test-phpmnd-ubuntu-latest": [
-      "@phpmnd"
-    ],
-    "test-phpstan-macos-latest": [
-      "@phpstan"
-    ],
-    "test-phpstan-ubuntu-latest": [
-      "@phpstan"
-    ],
-    "test-phpunit-macos-latest": [
+    "phpstan": "vendor/bin/phpstan analyse",
+    "phpunit": "XDEBUG_MODE=coverage vendor/bin/phpunit --configuration phpunit.xml.dist",
+    "test": [
+      "@phpcs",
+      "@phpmd",
+      "@phpstan",
       "@phpunit"
     ],
-    "test-phpunit-ubuntu-latest": [
-      "@phpunit"
-    ],
-    "test-psalm-macos-latest": [
-      "@psalm"
-    ],
-    "test-psalm-ubuntu-latest": [
-      "@psalm"
+    "test-github": [
+      "@test"
     ]
   }
 }

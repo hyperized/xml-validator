@@ -1,14 +1,14 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Hyperized\Xml\Exceptions;
 
-use Exception;
+use RuntimeException;
 
 /**
- * Class EmptyFile
- *
- * @package Hyperized\Xml\Exceptions
+ * The file exists and is readable, but holds nothing.
  */
-class EmptyFile extends Exception
+final class EmptyFile extends RuntimeException implements XmlValidatorException
 {
 }
